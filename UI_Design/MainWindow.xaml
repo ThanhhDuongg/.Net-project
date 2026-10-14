@@ -1,0 +1,148 @@
+<Window x:Class="FashionWarehouse.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="HỆ THỐNG QUẢN LÝ KHO HÀNG QUẦN ÁO - FASHION WMS (.NET 10)"
+        Height="800" Width="1350"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI"
+        Background="#F4F6F9">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/> <!-- Menu bên trái (Sidebar) -->
+            <ColumnDefinition Width="*"/>   <!-- Vùng hiển thị nội dung chính -->
+        </Grid.ColumnDefinitions>
+
+        <!-- ================= SIDEBAR MENU ================= -->
+        <Border Grid.Column="0" Background="#1E293B">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="90"/> <!-- Header Logo -->
+                    <RowDefinition Height="*"/>  <!-- Danh sách menu điều hướng -->
+                    <RowDefinition Height="80"/> <!-- Thông tin User đăng nhập & Đăng xuất -->
+                </Grid.RowDefinitions>
+
+                <!-- Logo & Brand Name -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="24,0,0,0">
+                    <Border Width="45" Height="45" CornerRadius="8" Background="#3B82F6">
+                        <TextBlock Text="FW" FontWeight="Bold" FontSize="20" Foreground="White" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Margin="14,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="FASHION WMS" FontWeight="Bold" FontSize="16" Foreground="White"/>
+                        <TextBlock Text="Kho Hàng Thời Trang" FontSize="12" Foreground="#94A3B8"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Navigation List -->
+                <StackPanel Grid.Row="1" Margin="12,20,12,0">
+                    <Button Height="48" Margin="0,4" HorizontalContentAlignment="Left" Background="#2563EB" Foreground="White" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" Margin="12,0">
+                            <materialDesign:PackIcon Kind="ViewDashboardOutline" Width="22" Height="22" VerticalAlignment="Center"/>
+                            <TextBlock Text="Tổng quan (Dashboard)" Margin="14,0,0,0" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Height="48" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" Margin="12,0">
+                            <materialDesign:PackIcon Kind="TshirtCrewOutline" Width="22" Height="22" VerticalAlignment="Center"/>
+                            <TextBlock Text="Quản lý Sản phẩm & SKU" Margin="14,0,0,0" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Height="48" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" Margin="12,0">
+                            <materialDesign:PackIcon Kind="BarcodeScan" Width="22" Height="22" VerticalAlignment="Center"/>
+                            <TextBlock Text="Nhập / Xuất Kho" Margin="14,0,0,0" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Height="48" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" Margin="12,0">
+                            <materialDesign:PackIcon Kind="Warehouse" Width="22" Height="22" VerticalAlignment="Center"/>
+                            <TextBlock Text="Tồn kho & Vị trí kệ" Margin="14,0,0,0" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Height="48" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" Margin="12,0">
+                            <materialDesign:PackIcon Kind="FileExcelOutline" Width="22" Height="22" VerticalAlignment="Center"/>
+                            <TextBlock Text="Báo cáo & Thống kê" Margin="14,0,0,0" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Height="48" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" Margin="12,0">
+                            <materialDesign:PackIcon Kind="AccountGroupOutline" Width="22" Height="22" VerticalAlignment="Center"/>
+                            <TextBlock Text="Nhân viên & Phân quyền" Margin="14,0,0,0" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Current User Info -->
+                <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="#334155" Padding="16,0">
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="#475569">
+                            <materialDesign:PackIcon Kind="AccountCircle" Width="36" Height="36" Foreground="#E2E8F0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="Nguyễn Quản Trị" FontWeight="SemiBold" FontSize="13" Foreground="White"/>
+                            <TextBlock Text="Quản trị viên (Admin)" FontSize="11" Foreground="#94A3B8"/>
+                        </StackPanel>
+                        <Button Grid.Column="2" Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Đăng xuất">
+                            <materialDesign:PackIcon Kind="Logout" Width="20" Height="20" Foreground="#EF4444"/>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ================= CONTENT AREA ================= -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="65"/> <!-- Topbar -->
+                <RowDefinition Height="*"/>  <!-- Dynamic Page View -->
+            </Grid.RowDefinitions>
+
+            <!-- Topbar Header -->
+            <Border Grid.Row="0" Background="White" BorderThickness="0,0,0,1" BorderBrush="#E2E8F0" Padding="25,0">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="BẢNG ĐIỀU KHIỂN TRUNG TÂM" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                        <TextBlock Text="Cập nhật dữ liệu thời gian thực từ cơ sở dữ liệu MySQL" FontSize="12" Foreground="#64748B"/>
+                    </StackPanel>
+
+                    <!-- Quick Action Buttons -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Height="38" Margin="0,0,12,0" Background="#10B981" Foreground="White" BorderThickness="0">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="PlusBox" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Tạo phiếu Nhập/Xuất" Margin="8,0,0,0" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Height="38" Background="#F1F5F9" Foreground="#334155" BorderThickness="0">
+                            <materialDesign:PackIcon Kind="BellOutline" Width="20" Height="20"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Dynamic View Placeholder (Nơi đổ View Dashboard, Product, Receipt...) -->
+            <ContentControl Grid.Row="1" Margin="25"/>
+        </Grid>
+    </Grid>
+</Window>

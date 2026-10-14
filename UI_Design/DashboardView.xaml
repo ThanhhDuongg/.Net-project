@@ -1,0 +1,132 @@
+<UserControl x:Class="FashionWarehouse.UI.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1100"
+             FontFamily="Segoe UI">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- 4 Card KPI Tổng quan -->
+            <RowDefinition Height="*"/>    <!-- Cảnh báo hết hàng & Tác vụ nhanh xuất Excel -->
+        </Grid.RowDefinitions>
+
+        <!-- 1. HÀNG 4 THẺ THỐNG KÊ (KPI CARDS) -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Card 1: Tổng mã SKU -->
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="18">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="TỔNG BIẾN THỂ (SKU)" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <TextBlock Text="1,248" FontSize="26" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
+                        <TextBlock Text="Đang lưu hành" FontSize="11" Foreground="#10B981" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <materialDesign:PackIcon Kind="TagMultipleOutline" Width="32" Height="32" Foreground="#3B82F6" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                </Grid>
+            </Border>
+
+            <!-- Card 2: Tổng lượng tồn kho -->
+            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="18">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="TỒN KHO THỰC TẾ" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <TextBlock Text="18,650" FontSize="26" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
+                        <TextBlock Text="Cái/Bộ sản phẩm" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <materialDesign:PackIcon Kind="PackageVariantClosed" Width="32" Height="32" Foreground="#10B981" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                </Grid>
+            </Border>
+
+            <!-- Card 3: Cảnh báo sắp hết hàng (Low stock) -->
+            <Border Grid.Column="4" Background="White" CornerRadius="8" Padding="18">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="CẢNH BÁO HẾT HÀNG" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <TextBlock Text="14 SKU" FontSize="26" FontWeight="Bold" Foreground="#EF4444" Margin="0,6,0,0"/>
+                        <TextBlock Text="Tồn dưới ngưỡng an toàn" FontSize="11" Foreground="#EF4444" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <materialDesign:PackIcon Kind="AlertDecagramOutline" Width="32" Height="32" Foreground="#EF4444" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                </Grid>
+            </Border>
+
+            <!-- Card 4: Tổng giá trị hàng trong kho -->
+            <Border Grid.Column="6" Background="White" CornerRadius="8" Padding="18">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="TỔNG GIÁ TRỊ TỒN" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <TextBlock Text="2.85 Tỷ" FontSize="26" FontWeight="Bold" Foreground="#2563EB" Margin="0,6,0,0"/>
+                        <TextBlock Text="Tính theo giá vốn" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <materialDesign:PackIcon Kind="CurrencyUsd" Width="32" Height="32" Foreground="#F59E0B" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- 2. BẢNG CẢNH BÁO HÀNG SẮP HẾT & NÚT XUẤT EXCEL (CLOSEDXML) -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Danh Sách Mặt Hàng Cần Nhập Thêm (Dưới Ngưỡng An Toàn)" FontWeight="Bold" FontSize="16" Foreground="#1E293B"/>
+                        <TextBlock Text="Hệ thống tự động lọc các mặt hàng có số lượng tồn <= SafetyStock" FontSize="12" Foreground="#64748B"/>
+                    </StackPanel>
+
+                    <!-- Nút xuất Excel (Module Bạn B phụ trách - ClosedXML) -->
+                    <Button Grid.Column="1" Height="40" Background="#10B981" Foreground="White" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="FileExcelBox" Width="20" Height="20" VerticalAlignment="Center"/>
+                            <TextBlock Text="Xuất Báo Cáo Excel (.xlsx)" Margin="8,0,0,0" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+
+                <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False"
+                          HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="#F1F5F9" Background="Transparent"
+                          RowHeight="44" BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã SKU" Binding="{Binding SKU}" FontWeight="Bold" Width="140"/>
+                        <DataGridTextColumn Header="Tên Hàng Hóa" Binding="{Binding ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="Màu" Binding="{Binding ColorName}" Width="80"/>
+                        <DataGridTextColumn Header="Size" Binding="{Binding SizeName}" Width="70"/>
+                        <DataGridTextColumn Header="Vị trí kệ" Binding="{Binding LocationCode}" Width="110"/>
+                        <DataGridTextColumn Header="Tồn Hiện Tại" Binding="{Binding QuantityOnHand}" FontWeight="Bold" Foreground="#EF4444" Width="110"/>
+                        <DataGridTextColumn Header="Ngưỡng An Toàn" Binding="{Binding SafetyStock}" Width="120"/>
+                        
+                        <DataGridTemplateColumn Header="Tình trạng" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Background="#FEE2E2" CornerRadius="10" Padding="8,3" HorizontalAlignment="Left">
+                                        <TextBlock Text="Cần nhập hàng" Foreground="#DC2626" FontWeight="SemiBold" FontSize="11"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

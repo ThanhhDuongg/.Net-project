@@ -1,0 +1,173 @@
+<UserControl x:Class="FashionWarehouse.UI.Views.ProductView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1050"
+             FontFamily="Segoe UI">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Thanh công cụ tìm kiếm và nút bấm -->
+            <RowDefinition Height="*"/>    <!-- 2 Cột: Bên trái tạo biến thể, bên phải danh sách SKU -->
+        </Grid.RowDefinitions>
+
+        <!-- 1. THANH TÁC VỤ TRÊN CÙNG -->
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="350"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" 
+                         materialDesign:HintAssist.Hint="Tìm kiếm theo mã SKU, tên áo, mã vạch..." 
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Height="42" Padding="8,4"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Height="42" Margin="0,0,10,0" Background="#3B82F6" Foreground="White" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="AutoFix" Width="18" Height="18" VerticalAlignment="Center"/>
+                            <TextBlock Text="Sinh biến thể (SKU Explosion)" Margin="8,0,0,0" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Height="42" Background="#10B981" Foreground="White" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="PrinterOutline" Width="18" Height="18" VerticalAlignment="Center"/>
+                            <TextBlock Text="In toàn bộ mã vạch Barcode" Margin="8,0,0,0" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 2. NỘI DUNG CHÍNH (2 CỘT) -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="380"/> <!-- Form nhập thông tin mẫu áo & chọn màu/size -->
+                <ColumnDefinition Width="*"/>   <!-- Bảng ma trận danh sách SKU và Barcode -->
+            </Grid.ColumnDefinitions>
+
+            <!-- CỘT TRÁI: FORM TẠO SẢN PHẨM & TỔ HỢP BIẾN THỂ -->
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="20" Margin="0,0,16,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="Thông Tin Mẫu Áo Quần" FontWeight="Bold" FontSize="16" Foreground="#1E293B" Margin="0,0,0,14"/>
+                        
+                        <TextBox materialDesign:HintAssist.Hint="Mã sản phẩm (VD: POLO01)" 
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,12"/>
+
+                        <TextBox materialDesign:HintAssist.Hint="Tên sản phẩm (VD: Áo Polo Cotton Classic)" 
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,12"/>
+
+                        <ComboBox materialDesign:HintAssist.Hint="Danh mục" 
+                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,0,0,12">
+                            <ComboBoxItem Content="Áo Thun / T-Shirt" IsSelected="True"/>
+                            <ComboBoxItem Content="Áo Sơ Mi"/>
+                            <ComboBoxItem Content="Quần Jeans"/>
+                        </ComboBox>
+
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" materialDesign:HintAssist.Hint="Giá vốn (Cost)" Text="120,000"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                            <TextBox Grid.Column="2" materialDesign:HintAssist.Hint="Giá bán (Sale)" Text="250,000"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        </Grid>
+
+                        <Separator Background="#E2E8F0" Margin="0,8,0,16"/>
+
+                        <!-- Tổ hợp màu sắc -->
+                        <TextBlock Text="Chọn Màu Sắc (Colors)" FontWeight="SemiBold" FontSize="14" Foreground="#334155" Margin="0,0,0,8"/>
+                        <WrapPanel Margin="0,0,0,16">
+                            <CheckBox Content="Trắng" IsChecked="True" Margin="0,0,16,8"/>
+                            <CheckBox Content="Đen" IsChecked="True" Margin="0,0,16,8"/>
+                            <CheckBox Content="Xanh Navy" IsChecked="True" Margin="0,0,16,8"/>
+                            <CheckBox Content="Xám" Margin="0,0,16,8"/>
+                        </WrapPanel>
+
+                        <!-- Tổ hợp kích cỡ -->
+                        <TextBlock Text="Chọn Kích Cỡ (Sizes)" FontWeight="SemiBold" FontSize="14" Foreground="#334155" Margin="0,0,0,8"/>
+                        <WrapPanel Margin="0,0,0,20">
+                            <CheckBox Content="S" IsChecked="True" Margin="0,0,16,8"/>
+                            <CheckBox Content="M" IsChecked="True" Margin="0,0,16,8"/>
+                            <CheckBox Content="L" IsChecked="True" Margin="0,0,16,8"/>
+                            <CheckBox Content="XL" IsChecked="True" Margin="0,0,16,8"/>
+                            <CheckBox Content="XXL" Margin="0,0,16,8"/>
+                        </WrapPanel>
+
+                        <Button Height="44" Background="#2563EB" Foreground="White" BorderThickness="0">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="PlusCircleOutline" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Tạo &amp; Lưu Vào CSDL" Margin="8,0,0,0" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- CỘT PHẢI: MA TRẬN BIẾN THỂ VÀ HÌNH ẢNH MÃ VẠCH (ZXING) -->
+            <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,14">
+                        <TextBlock Text="Ma Trận Biến Thể SKU Đã Sinh Ra" FontWeight="Bold" FontSize="16" Foreground="#1E293B"/>
+                        <Border Background="#EFF6FF" CornerRadius="12" Margin="12,0,0,0" Padding="8,2">
+                            <TextBlock Text="12 Biến thể" Foreground="#2563EB" FontWeight="Bold" FontSize="12"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- DataGrid hiển thị chi tiết biến thể và Barcode -->
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False"
+                              HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                              HorizontalGridLinesBrush="#F1F5F9" Background="Transparent"
+                              RowHeight="50" BorderThickness="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Mã SKU" Binding="{Binding SKU}" FontWeight="Bold" Width="140"/>
+                            <DataGridTextColumn Header="Màu" Binding="{Binding ColorName}" Width="80"/>
+                            <DataGridTextColumn Header="Size" Binding="{Binding SizeName}" Width="60"/>
+                            <DataGridTextColumn Header="Giá Bán" Binding="{Binding SalePrice, StringFormat={}{0:N0} đ}" Width="100"/>
+                            
+                            <!-- Cột Mã vạch Barcode hiển thị chuỗi và ảnh Barcode -->
+                            <DataGridTemplateColumn Header="Mã Vạch Quét Súng (Barcode)" Width="220">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="Barcode" Width="36" Height="26" Foreground="#334155" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Barcode}" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" FontFamily="Consolas"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Thao tác in tem nhãn riêng lẻ -->
+                            <DataGridTemplateColumn Header="Thao tác" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Height="30" Padding="8,0" Background="#F1F5F9" Foreground="#3B82F6" BorderThickness="0" Cursor="Hand">
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Printer" Width="14" Height="14" VerticalAlignment="Center"/>
+                                                <TextBlock Text="In tem" Margin="4,0,0,0" FontSize="12"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
