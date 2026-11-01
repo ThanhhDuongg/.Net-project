@@ -4,43 +4,101 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1050"
+             d:DesignHeight="720" d:DesignWidth="1050"
              FontFamily="Segoe UI">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Khung quét súng Barcode -->
-        <Border Grid.Row="0" Background="#FEF3C7" BorderBrush="#F59E0B" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+        <!-- Khung nhập liệu: Hỗ trợ cả gõ/bắn Barcode lẫn Tìm kiếm theo Tên/SKU -->
+        <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Hàng 1: 2 chế độ chọn hàng -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="380"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Cách 1: Chọn từ danh mục / ComboBox (Không cần nhớ mã) -->
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="CÁCH 1: CHỌN MẶT HÀNG TỪ DANH MỤC KHO" FontWeight="Bold" Foreground="#2563EB" FontSize="12" Margin="0,0,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Name="cboProductPicker" Height="38" VerticalContentAlignment="Center" Margin="0,0,8,0" SelectedIndex="0"/>
+                            <Button Grid.Column="1" Click="BtnAddFromPicker_Click" Height="38" Background="#2563EB" Foreground="White" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                                <TextBlock Text="+ Thêm hàng" FontWeight="SemiBold"/>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Cách 2: Gõ mã Barcode / SKU bằng phím (hoặc súng bắn nếu có) -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="CÁCH 2: NHẬP TRỰC TIẾP BARCODE HOẶC SKU (BẤM ENTER)" FontWeight="Bold" Foreground="#D97706" FontSize="12" Margin="0,0,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Name="txtBarcode" Height="38" FontSize="14" FontWeight="Bold" FontFamily="Consolas"
+                                     KeyDown="TxtBarcode_KeyDown"
+                                     VerticalContentAlignment="Center" Padding="10,0"/>
+                            <Button Grid.Column="1" Click="BtnAddBarcode_Click" Height="38" Margin="8,0,0,0" Background="#F59E0B" Foreground="White" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                                <TextBlock Text="Quét / Nhận" FontWeight="SemiBold"/>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Hàng 2: Các nút bấm chọn nhanh (Quick-Pick) các mẫu phổ biến -->
+                <WrapPanel Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="Chọn nhanh mẫu test: " FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <Button Click="BtnQuickAdd_Click" Tag="893600100101" Content="Áo Polo Đen (M)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
+                    <Button Click="BtnQuickAdd_Click" Tag="893600100102" Content="Áo Polo Đen (L)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
+                    <Button Click="BtnQuickAdd_Click" Tag="893600100103" Content="Áo Polo Trắng (M)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
+                    <Button Click="BtnQuickAdd_Click" Tag="893600100104" Content="Áo Polo Trắng (L)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <!-- Panel thông tin mặt hàng vừa chọn (Visual Feedback) -->
+        <Border x:Name="pnlScannedInfo" Grid.Row="1" Background="#ECFDF5" BorderBrush="#10B981" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,12" Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="280"/>
-                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                    <TextBlock Text="CHẾ ĐỘ SÚNG BẮN MÃ VẠCH" FontWeight="Bold" Foreground="#92400E" FontSize="13"/>
-                    <TextBlock Text="Bắn mã vào ô bên cạnh để thêm hàng" Foreground="#B45309" FontSize="11"/>
-                </StackPanel>
-
-                <TextBox Name="txtBarcode" Grid.Column="1" Height="40" FontSize="15" FontWeight="Bold" FontFamily="Consolas"
-                         KeyDown="TxtBarcode_KeyDown"
-                         VerticalContentAlignment="Center" Padding="10,0"/>
-
-                <Button Grid.Column="2" Click="BtnAddBarcode_Click" Height="40" Margin="10,0,0,0" Background="#D97706" Foreground="White" BorderThickness="0" Padding="14,0" Cursor="Hand">
-                    <TextBlock Text="+ Thêm dòng" FontWeight="SemiBold"/>
-                </Button>
+                <TextBlock Grid.Column="0" Text="✓" FontSize="18" FontWeight="Bold" Foreground="#059669" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <WrapPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="Đã thêm: " Foreground="#065F46" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="lblScannedSku" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,16,0"/>
+                    <TextBlock Text="Sản phẩm: " Foreground="#065F46" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="lblScannedName" Foreground="#1E293B" Margin="0,0,16,0"/>
+                    <TextBlock Text="Tồn hiện tại: " Foreground="#065F46" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="lblScannedStock" FontWeight="Bold" Margin="0,0,16,0"/>
+                    <TextBlock Text="Vị trí kệ: " Foreground="#065F46" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="lblScannedLoc" Foreground="#1E293B"/>
+                </WrapPanel>
             </Grid>
         </Border>
 
         <!-- 2 Cột: Bảng hàng hóa & Thông tin phiếu -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="320"/>
+                <ColumnDefinition Width="340"/>
             </Grid.ColumnDefinitions>
 
             <!-- Cột trái: Bảng hàng hóa -->
@@ -51,19 +109,24 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="Danh Sách Mặt Hàng Trong Phiếu" FontWeight="Bold" FontSize="16" Foreground="#1E293B" Margin="0,0,0,12"/>
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock Text="Danh Sách Mặt Hàng Trong Phiếu" FontWeight="Bold" FontSize="16" Foreground="#1E293B"/>
+                        <TextBlock Text="(Double-click dòng để xóa | Click nút để sửa số lượng)" HorizontalAlignment="Right" FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center"/>
+                    </Grid>
 
                     <DataGrid Grid.Row="1" Name="dgReceiptItems" AutoGenerateColumns="False" CanUserAddRows="False"
                               GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
-                              HeadersVisibility="Column" RowHeight="42" BorderThickness="0" Background="Transparent">
+                              HeadersVisibility="Column" RowHeight="42" BorderThickness="0" Background="Transparent"
+                              MouseDoubleClick="DgReceiptItems_MouseDoubleClick">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="STT" Width="50" Binding="{Binding Index}"/>
-                            <DataGridTextColumn Header="Mã SKU" Width="130" Binding="{Binding SKU}" FontWeight="Bold"/>
+                            <DataGridTextColumn Header="STT" Width="45" Binding="{Binding Index}"/>
+                            <DataGridTextColumn Header="Mã Barcode" Width="110" Binding="{Binding Barcode}"/>
+                            <DataGridTextColumn Header="Mã SKU" Width="125" Binding="{Binding SKU}" FontWeight="Bold"/>
                             <DataGridTextColumn Header="Tên Hàng / Quy cách" Width="*" Binding="{Binding DisplayName}"/>
-                            <DataGridTextColumn Header="Vị trí kệ" Width="90" Binding="{Binding LocationCode}"/>
-                            <DataGridTextColumn Header="Số lượng" Width="80" Binding="{Binding Quantity}" FontWeight="Bold"/>
-                            <DataGridTextColumn Header="Đơn giá" Width="100" Binding="{Binding UnitPrice, StringFormat={}{0:N0} đ}"/>
-                            <DataGridTextColumn Header="Thành tiền" Width="120" Binding="{Binding TotalLineAmount, StringFormat={}{0:N0} đ}" FontWeight="SemiBold"/>
+                            <DataGridTextColumn Header="Vị trí" Width="75" Binding="{Binding LocationCode}"/>
+                            <DataGridTextColumn Header="Số lượng" Width="70" Binding="{Binding Quantity}" FontWeight="Bold"/>
+                            <DataGridTextColumn Header="Đơn giá" Width="95" Binding="{Binding UnitPrice, StringFormat={}{0:N0} đ}"/>
+                            <DataGridTextColumn Header="Thành tiền" Width="110" Binding="{Binding TotalLineAmount, StringFormat={}{0:N0} đ}" FontWeight="SemiBold"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -76,31 +139,32 @@
 
                     <TextBlock Text="Loại Giao Dịch:" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,4"/>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                        <RadioButton Content="Nhập Kho" IsChecked="True" Margin="0,0,18,0" FontWeight="SemiBold" Foreground="#10B981"/>
-                        <RadioButton Content="Xuất Kho" FontWeight="SemiBold" Foreground="#EF4444"/>
+                        <RadioButton Name="rdoImport" Content="Nhập Kho" IsChecked="True" Checked="TransactionType_Changed" Margin="0,0,18,0" FontWeight="SemiBold" Foreground="#10B981"/>
+                        <RadioButton Name="rdoExport" Content="Xuất Kho" Checked="TransactionType_Changed" FontWeight="SemiBold" Foreground="#EF4444"/>
                     </StackPanel>
 
                     <TextBlock Text="Mã phiếu:" Foreground="#64748B" Margin="0,0,0,4"/>
-                    <TextBox Text="PN-20261014-001" IsReadOnly="True" Height="34" Padding="6" Margin="0,0,0,12"/>
+                    <TextBox Name="txtReceiptCode" Height="34" Padding="6" Margin="0,0,0,12"/>
 
                     <TextBlock Text="Nhà cung cấp / Đối tác:" Foreground="#64748B" Margin="0,0,0,4"/>
-                    <ComboBox Height="34" SelectedIndex="0" Margin="0,0,0,12">
+                    <ComboBox Name="cboPartner" Height="34" SelectedIndex="0" Margin="0,0,0,12">
                         <ComboBoxItem Content="Công Ty May Mặc Việt Tiến"/>
                         <ComboBoxItem Content="Tổng Công Ty Đức Giang"/>
+                        <ComboBoxItem Content="Khách mua buôn / Đại lý"/>
                     </ComboBox>
 
                     <TextBlock Text="Ghi chú chứng từ:" Foreground="#64748B" Margin="0,0,0,4"/>
-                    <TextBox Height="34" Padding="6" Margin="0,0,0,18"/>
+                    <TextBox Name="txtNotes" Height="45" TextWrapping="Wrap" AcceptsReturn="True" Padding="6" Margin="0,0,0,16"/>
 
-                    <Border Background="#F8FAFC" CornerRadius="6" Padding="12" Margin="0,0,0,18">
+                    <Border Background="#F8FAFC" CornerRadius="6" Padding="12" Margin="0,0,0,16">
                         <StackPanel>
                             <Grid Margin="0,0,0,6">
                                 <TextBlock Text="Tổng số lượng:" Foreground="#64748B"/>
-                                <TextBlock Name="txtTotalQty" Text="90 Cái" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                <TextBlock Name="txtTotalQty" Text="0 Cái" FontWeight="Bold" HorizontalAlignment="Right"/>
                             </Grid>
                             <Grid>
                                 <TextBlock Text="Tổng tiền phiếu:" FontWeight="Bold" Foreground="#1E293B"/>
-                                <TextBlock Name="txtTotalAmount" Text="10,800,000 đ" FontWeight="Bold" FontSize="15" HorizontalAlignment="Right" Foreground="#2563EB"/>
+                                <TextBlock Name="txtTotalAmount" Text="0 đ" FontWeight="Bold" FontSize="15" HorizontalAlignment="Right" Foreground="#2563EB"/>
                             </Grid>
                         </StackPanel>
                     </Border>
@@ -109,8 +173,8 @@
                         <TextBlock Text="LƯU &amp; HOÀN TẤT PHIẾU" FontWeight="Bold"/>
                     </Button>
 
-                    <Button Height="36" Background="#F1F5F9" Foreground="#64748B" BorderThickness="0" Cursor="Hand">
-                        <TextBlock Text="Hủy bỏ"/>
+                    <Button Click="BtnReset_Click" Height="36" Background="#F1F5F9" Foreground="#64748B" BorderThickness="0" Cursor="Hand">
+                        <TextBlock Text="Xóa Trắng &amp; Tạo Phiếu Mới"/>
                     </Button>
                 </StackPanel>
             </Border>

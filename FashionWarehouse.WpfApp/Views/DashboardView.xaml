@@ -4,95 +4,144 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1050"
+             d:DesignHeight="750" d:DesignWidth="1050"
              FontFamily="Segoe UI">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="200"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- 4 Thẻ KPI -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
+        <!-- 1. 4 Thẻ KPI Tổng quan -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="14"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="14"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="14"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="18">
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <TextBlock Text="TỔNG BIẾN THỂ (SKU)" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
-                    <TextBlock Text="1,248" FontSize="26" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
+                    <TextBlock x:Name="txtSkuCount" Text="1,248" FontSize="24" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
                     <TextBlock Text="Đang lưu hành" FontSize="11" Foreground="#10B981" Margin="0,4,0,0"/>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="18">
+            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <TextBlock Text="TỒN KHO THỰC TẾ" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
-                    <TextBlock Text="18,650" FontSize="26" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
+                    <TextBlock x:Name="txtInventoryQuantity" Text="18,650" FontSize="24" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
                     <TextBlock Text="Cái/Bộ sản phẩm" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="4" Background="White" CornerRadius="8" Padding="18">
+            <Border Grid.Column="4" Background="White" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <TextBlock Text="CẢNH BÁO HẾT HÀNG" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
-                    <TextBlock Text="14 SKU" FontSize="26" FontWeight="Bold" Foreground="#EF4444" Margin="0,6,0,0"/>
+                    <TextBlock x:Name="txtLowStockCount" Text="14 SKU" FontSize="24" FontWeight="Bold" Foreground="#EF4444" Margin="0,6,0,0"/>
                     <TextBlock Text="Tồn dưới ngưỡng an toàn" FontSize="11" Foreground="#EF4444" Margin="0,4,0,0"/>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="6" Background="White" CornerRadius="8" Padding="18">
+            <Border Grid.Column="6" Background="White" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <TextBlock Text="TỔNG GIÁ TRỊ TỒN" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
-                    <TextBlock Text="2.85 Tỷ" FontSize="26" FontWeight="Bold" Foreground="#2563EB" Margin="0,6,0,0"/>
+                    <TextBlock x:Name="txtInventoryValue" Text="2.85 Tỷ" FontSize="24" FontWeight="Bold" Foreground="#2563EB" Margin="0,6,0,0"/>
                     <TextBlock Text="Tính theo giá vốn" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!-- Bảng cảnh báo hàng hết -->
-        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="20">
+        <!-- 2. Biểu đồ thống kê biến động Nhập / Xuất (Charts) -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="16" Margin="0,0,0,16">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,16">
+                <Grid Grid.Row="0">
+                    <TextBlock Text="BIẾN ĐỘNG NHẬP / XUẤT 14 NGÀY GẦN NHẤT" FontWeight="Bold" FontSize="14" Foreground="#1E293B"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Border Background="#10B981" Width="10" Height="10" CornerRadius="2" Margin="0,0,5,0"/>
+                        <TextBlock Text="Nhập" Foreground="#64748B" FontSize="12" Margin="0,0,14,0"/>
+                        <Border Background="#EF4444" Width="10" Height="10" CornerRadius="2" Margin="0,0,5,0"/>
+                        <TextBlock Text="Xuất" Foreground="#64748B" FontSize="12"/>
+                    </StackPanel>
+                </Grid>
+
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="0,8,0,0">
+                    <ItemsControl x:Name="icMovementChart">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Width="58" Margin="4,0" VerticalAlignment="Bottom">
+                                    <Grid Height="110" VerticalAlignment="Bottom">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="#10B981" Width="18" Height="{Binding ImportHeight}" VerticalAlignment="Bottom" HorizontalAlignment="Center" CornerRadius="2,2,0,0" ToolTip="{Binding ImportTooltip}"/>
+                                        <Border Grid.Column="1" Background="#EF4444" Width="18" Height="{Binding ExportHeight}" VerticalAlignment="Bottom" HorizontalAlignment="Center" CornerRadius="2,2,0,0" ToolTip="{Binding ExportTooltip}"/>
+                                    </Grid>
+                                    <TextBlock Text="{Binding DateLabel}" FontSize="10" Foreground="#64748B" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- 3. Bảng cảnh báo hàng hết & Nút xuất báo cáo Excel ClosedXML -->
+        <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Danh Sách Mặt Hàng Cần Nhập Thêm (Dưới Ngưỡng An Toàn)" FontWeight="Bold" FontSize="16" Foreground="#1E293B"/>
-                        <TextBlock Text="Hệ thống tự động lọc các mặt hàng có số lượng tồn <= SafetyStock" FontSize="12" Foreground="#64748B"/>
+                        <TextBlock Text="Danh Sách Mặt Hàng Cần Nhập Thêm (Dưới Ngưỡng An Toàn)" FontWeight="Bold" FontSize="15" Foreground="#1E293B"/>
+                        <TextBlock Text="Hệ thống tự động lọc các mặt hàng có tồn kho &lt;= Ngưỡng an toàn" FontSize="12" Foreground="#64748B"/>
                     </StackPanel>
 
-                    <Button Grid.Column="1" Height="38" Background="#10B981" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
-                        <TextBlock Text="Xuất Báo Cáo Excel (.xlsx)" FontWeight="SemiBold"/>
+                    <Button Grid.Column="1" Click="BtnExportExcel_Click" Height="38" Background="#10B981" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📊 " VerticalAlignment="Center"/>
+                            <TextBlock Text="Xuất Báo Cáo Excel (.xlsx)" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </Button>
                 </Grid>
 
-                <DataGrid Grid.Row="1" Name="dgAlerts" AutoGenerateColumns="False" CanUserAddRows="False"
+                <DataGrid Grid.Row="1" x:Name="dgAlerts" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
                           HeadersVisibility="Column" GridLinesVisibility="Horizontal"
                           HorizontalGridLinesBrush="#F1F5F9" Background="Transparent"
-                          RowHeight="44" BorderThickness="0">
+                          RowHeight="40" BorderThickness="0">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Mã SKU" Binding="{Binding SKU}" FontWeight="Bold" Width="140"/>
                         <DataGridTextColumn Header="Tên Hàng Hóa" Binding="{Binding ProductName}" Width="*"/>
-                        <DataGridTextColumn Header="Màu" Binding="{Binding ColorName}" Width="90"/>
-                        <DataGridTextColumn Header="Size" Binding="{Binding SizeName}" Width="70"/>
-                        <DataGridTextColumn Header="Vị trí kệ" Binding="{Binding LocationCode}" Width="110"/>
-                        <DataGridTextColumn Header="Tồn Hiện Tại" Binding="{Binding QuantityOnHand}" FontWeight="Bold" Foreground="#EF4444" Width="110"/>
-                        <DataGridTextColumn Header="Ngưỡng An Toàn" Binding="{Binding SafetyStock}" Width="120"/>
+                        <DataGridTextColumn Header="Màu" Binding="{Binding ColorName}" Width="80"/>
+                        <DataGridTextColumn Header="Size" Binding="{Binding SizeName}" Width="60"/>
+                        <DataGridTextColumn Header="Vị trí kệ" Binding="{Binding LocationCode}" Width="100"/>
+                        <DataGridTextColumn Header="Tồn Hiện Tại" Binding="{Binding QuantityOnHand}" FontWeight="Bold" Foreground="#EF4444" Width="100"/>
+                        <DataGridTextColumn Header="Ngưỡng An Toàn" Binding="{Binding SafetyStock}" Width="110"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

@@ -19,7 +19,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="92"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="82"/>
+                    <RowDefinition Height="90"/>
                 </Grid.RowDefinitions>
 
                 <!-- Logo -->
@@ -55,12 +55,28 @@
                     </Button>
                 </StackPanel>
 
-                <!-- User detail -->
-                <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="#334155" Padding="16,0">
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="Nguyễn Quản Trị" FontWeight="SemiBold" FontSize="13" Foreground="White"/>
-                        <TextBlock Text="Quản trị viên (Admin)" FontSize="11" Foreground="#94A3B8"/>
-                    </StackPanel>
+                <!-- User detail & Logout -->
+                <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="#334155" Padding="16,10">
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Name="txtUserFullName" Text="Nguyễn Quản Trị" FontWeight="SemiBold" FontSize="13" Foreground="White" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Name="txtUserRole" Text="Quản trị viên (Admin)" FontSize="11" Foreground="#94A3B8" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="1" Click="BtnLogout_Click" ToolTip="Đăng xuất khỏi hệ thống" Background="#EF4444" Foreground="White" BorderThickness="0" Padding="8,4" Cursor="Hand">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="4"/>
+                                </Style>
+                            </Button.Resources>
+                            <TextBlock Text="Đăng xuất" FontSize="11" FontWeight="SemiBold"/>
+                        </Button>
+                    </Grid>
                 </Border>
             </Grid>
         </Border>

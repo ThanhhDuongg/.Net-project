@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using NetProject.Models.Enums;
 
 namespace NetProject.DTOs;
@@ -66,6 +64,8 @@ public class CreateReceiptDto
 
 public class InventoryStatusDto
 {
+    public int LocationId { get; set; }
+    public DateTime RowVersion { get; set; }
     public int VariantId { get; set; }
     public string SKU { get; set; } = string.Empty;
     public string Barcode { get; set; } = string.Empty;
@@ -76,4 +76,94 @@ public class InventoryStatusDto
     public int QuantityOnHand { get; set; }
     public int SafetyStock { get; set; }
     public bool IsLowStock => QuantityOnHand <= SafetyStock;
+}
+
+/// <summary>Yêu cầu một giao dịch nhập/xuất kho từ màn quét mã vạch hoặc API.</summary>
+public class InventoryTransactionRequestDto
+{
+    public string TransactionCode { get; set; } = string.Empty;
+    public ReceiptType TransactionType { get; set; }
+    public int UserId { get; set; }
+    public int? SupplierId { get; set; }
+    public string? CustomerName { get; set; }
+    public string? Notes { get; set; }
+    public List<InventoryTransactionItemDto> Items { get; set; } = new();
+}
+
+public class InventoryTransactionItemDto
+{
+    public int VariantId { get; set; }
+    public int LocationId { get; set; }
+    public int Quantity { get; set; }
+    public decimal UnitPrice { get; set; }
+
+    /// <summary>
+    /// Token RowVersion do client đọc cùng dữ liệu tồn kho. Khi khác token hiện tại, thao tác bị từ chối.
+    /// </summary>
+    public DateTime? ExpectedRowVersion { get; set; }
+}
+
+public class InventoryTransactionResultDto
+{
+    public int ReceiptId { get; set; }
+    public string ReceiptCode { get; set; } = string.Empty;
+    public DateTime CompletedAt { get; set; }
+    public IReadOnlyList<InventoryBalanceDto> Balances { get; set; } = Array.Empty<InventoryBalanceDto>();
+}
+
+public class InventoryBalanceDto
+{
+    public int InventoryId { get; set; }
+    public int VariantId { get; set; }
+    public int LocationId { get; set; }
+    public int QuantityOnHand { get; set; }
+    public DateTime RowVersion { get; set; }
+}
+
+public class DashboardSummaryDto
+{
+    public int TotalSkus { get; set; }
+    public int TotalQuantity { get; set; }
+    public int LowStockSkuCount { get; set; }
+    public decimal InventoryValue { get; set; }
+    public IReadOnlyList<DashboardChartPointDto> DailyMovements { get; set; } = Array.Empty<DashboardChartPointDto>();
+}
+
+public class DashboardChartPointDto
+{
+    public DateTime Date { get; set; }
+    public int Imports { get; set; }
+    public int Exports { get; set; }
+}
+
+public class InventoryReportRowDto
+{
+    public string SKU { get; set; } = string.Empty;
+    public string Barcode { get; set; } = string.Empty;
+    public string ProductName { get; set; } = string.Empty;
+    public string ColorName { get; set; } = string.Empty;
+    public string SizeName { get; set; } = string.Empty;
+    public string LocationCode { get; set; } = string.Empty;
+    public int QuantityOnHand { get; set; }
+    public int SafetyStock { get; set; }
+    public decimal CostPrice { get; set; }
+    public decimal InventoryValue => QuantityOnHand * CostPrice;
+}
+
+/// <summary>Dòng lịch sử giao dịch nhập/xuất/điều chỉnh tồn kho.</summary>
+public class TransactionHistoryDto
+{
+    public long TransactionId { get; set; }
+    public string TransactionType { get; set; } = string.Empty;
+    public string ReferenceNo { get; set; } = string.Empty;
+    public string SKU { get; set; } = string.Empty;
+    public string ProductName { get; set; } = string.Empty;
+    public string ColorName { get; set; } = string.Empty;
+    public string SizeName { get; set; } = string.Empty;
+    public string LocationCode { get; set; } = string.Empty;
+    public int QuantityChange { get; set; }
+    public int QuantityBefore { get; set; }
+    public int QuantityAfter { get; set; }
+    public DateTime OccurredAt { get; set; }
+    public string? Notes { get; set; }
 }

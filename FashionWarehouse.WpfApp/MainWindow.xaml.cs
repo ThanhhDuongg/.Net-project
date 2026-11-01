@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using FashionWarehouse.WpfApp.Services;
 using FashionWarehouse.WpfApp.Views;
 
 namespace FashionWarehouse.WpfApp;
@@ -14,7 +15,34 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        LoadUserInfo();
         ShowDashboard();
+    }
+
+    private void LoadUserInfo()
+    {
+        if (UserSession.IsLoggedIn)
+        {
+            txtUserFullName.Text = UserSession.FullName;
+            txtUserRole.Text = $"{UserSession.RoleName} ({UserSession.Username})";
+        }
+    }
+
+    private void BtnLogout_Click(object sender, RoutedEventArgs e)
+    {
+        var result = MessageBox.Show(
+            "Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?",
+            "Xác nhận đăng xuất",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (result == MessageBoxResult.Yes)
+        {
+            UserSession.Logout();
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+            this.Close();
+        }
     }
 
     private void BtnDashboard_Click(object sender, RoutedEventArgs e) => ShowDashboard();

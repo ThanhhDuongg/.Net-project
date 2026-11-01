@@ -113,7 +113,7 @@
                         <TextBlock Name="txtTotalCount" Text=" (12 biến thể)" Foreground="#2563EB" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
 
-                    <DataGrid Grid.Row="1" Name="dgVariants" AutoGenerateColumns="False" CanUserAddRows="False"
+                    <DataGrid Grid.Row="1" Name="dgVariants" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
                               HeadersVisibility="Column" GridLinesVisibility="Horizontal"
                               HorizontalGridLinesBrush="#F1F5F9" Background="Transparent"
                               RowHeight="44" BorderThickness="0">

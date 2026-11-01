@@ -6,6 +6,11 @@
 # dotenv files
 .env
 
+# Sensitive database configurations
+appsettings.json
+appsettings.Development.json
+!appsettings.example.json
+
 # User-specific files
 *.rsuser
 *.suo
@@ -485,3 +490,7 @@ $RECYCLE.BIN/
 .appdata/
 .localappdata/
 .dotnet/
+
+# Local NuGet APPDATA workaround
+.nuget_home/
+

@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="FashionWarehouse.WpfApp/FashionWarehouse.WpfApp.csproj" />
   <Project Path="NetProject.csproj" />
+  <Project Path="tests/BTL_CKy.UnitTests/BTL_CKy.UnitTests.csproj" />
 </Solution>

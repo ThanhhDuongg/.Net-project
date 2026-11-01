@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -33,14 +34,14 @@ public partial class ProductView : UserControl
         };
 
         string productCode = string.IsNullOrWhiteSpace(txtProductCode.Text) ? "PRODUCT" : txtProductCode.Text.Trim();
-        var result = new List<object>();
+        var result = new List<GeneratedVariantModel>();
 
         foreach (var c in colors.Where(c => c.IsSelected))
         {
             foreach (var s in sizes.Where(s => s.IsSelected))
             {
                 string sku = $"{productCode}-{c.Name[..3].ToUpper()}-{s.Name}";
-                result.Add(new
+                result.Add(new GeneratedVariantModel
                 {
                     SKU = sku,
                     ColorName = c.Name,
@@ -53,5 +54,14 @@ public partial class ProductView : UserControl
 
         dgVariants.ItemsSource = result;
         txtTotalCount.Text = $" ({result.Count} biến thể)";
+    }
+
+    public class GeneratedVariantModel
+    {
+        public string SKU { get; set; } = string.Empty;
+        public string ColorName { get; set; } = string.Empty;
+        public string SizeName { get; set; } = string.Empty;
+        public decimal SalePrice { get; set; }
+        public string Barcode { get; set; } = string.Empty;
     }
 }
