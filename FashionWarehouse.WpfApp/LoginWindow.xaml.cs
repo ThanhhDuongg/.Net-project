@@ -25,9 +25,7 @@ public partial class LoginWindow : Window
     private void Input_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
-        {
             BtnLogin_Click(sender, e);
-        }
     }
 
     private void BtnQuickAdmin_Click(object sender, RoutedEventArgs e)
@@ -52,14 +50,12 @@ public partial class LoginWindow : Window
         if (string.IsNullOrEmpty(username))
         {
             ShowAlert("Vui lòng nhập tên đăng nhập.");
-            txtUsername.Focus();
             return;
         }
 
         if (string.IsNullOrEmpty(password))
         {
             ShowAlert("Vui lòng nhập mật khẩu.");
-            txtPassword.Focus();
             return;
         }
 
@@ -69,86 +65,74 @@ public partial class LoginWindow : Window
 
         try
         {
+            // Ưu tiên gọi API nếu server đang chạy
             var requestData = new { Username = username, Password = password };
             var json = JsonSerializer.Serialize(requestData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-
             var response = await HttpClient.PostAsync("api/auth/login", content);
 
             if (response.IsSuccessStatusCode)
             {
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var loginResult = JsonSerializer.Deserialize<LoginResult>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+                var body = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<LoginResult>(body,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (loginResult != null)
+                if (result != null)
                 {
-                    UserSession.Login(loginResult.UserId, loginResult.Username, loginResult.FullName, loginResult.RoleName);
-                    
-                    var mainWindow = new MainWindow();
-                    mainWindow.Show();
-                    this.Close();
+                    UserSession.Login(result.UserId, result.Username, result.FullName, result.RoleName);
+                    OpenMainWindow();
                     return;
                 }
             }
-
-            // Xử lý khi API trả về mã lỗi 401 hoặc 400
-            var errorBody = await response.Content.ReadAsStringAsync();
-            try
-            {
-                var errorDoc = JsonDocument.Parse(errorBody);
-                if (errorDoc.RootElement.TryGetProperty("message", out var msgElement))
-                {
-                    ShowAlert(msgElement.GetString() ?? "Đăng nhập thất bại.");
-                }
-                else
-                {
-                    ShowAlert("Tên đăng nhập hoặc mật khẩu không chính xác.");
-                }
-            }
-            catch
-            {
-                ShowAlert("Tên đăng nhập hoặc mật khẩu không chính xác.");
-            }
         }
-        catch (HttpRequestException)
+        catch
         {
-            // Trường hợp máy chủ API chưa khởi động hoặc không kết nối được
-            // Cung cấp tính năng đăng nhập ngoại tuyến dự phòng cho tài khoản Seed chuẩn
-            if ((username == "admin" && password == "password") || (username == "thukho" && password == "password"))
-            {
-                if (username == "admin")
-                    UserSession.Login(1, "admin", "Quản Trị Viên (Offline)", "Admin");
-                else
-                    UserSession.Login(2, "thukho", "Trần Văn Kho (Offline)", "WarehouseKeeper");
-
-                MessageBox.Show("Không kết nối được Web API máy chủ. Đang đăng nhập ở chế độ Offline mặc định.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                var mainWindow = new MainWindow();
-                mainWindow.Show();
-                this.Close();
-                return;
-            }
-
-            ShowAlert("Không thể kết nối đến máy chủ backend (http://localhost:5116). Vui lòng đảm bảo API đang chạy.");
+            // API không chạy hoặc lỗi mạng — tiếp tục fallback
         }
-        catch (Exception ex)
+
+        // Fallback: xác thực cục bộ cho tài khoản seed mặc định
+        if (TryLocalLogin(username, password))
+            return;
+
+        ShowAlert("Tên đăng nhập hoặc mật khẩu không đúng.\n💡 Dùng: admin / password  hoặc  thukho / password");
+        btnLogin.IsEnabled = true;
+        txtLoginButton.Text = "ĐĂNG NHẬP";
+    }
+
+    private bool TryLocalLogin(string username, string password)
+    {
+        if (password != "password") return false;
+
+        if (username == "admin")
         {
-            ShowAlert($"Lỗi hệ thống: {ex.Message}");
+            UserSession.Login(1, "admin", "Quản Trị Viên", "Admin");
+            OpenMainWindow();
+            return true;
         }
-        finally
+
+        if (username == "thukho")
         {
-            btnLogin.IsEnabled = true;
-            txtLoginButton.Text = "ĐĂNG NHẬP";
+            UserSession.Login(2, "thukho", "Trần Văn Kho", "WarehouseKeeper");
+            OpenMainWindow();
+            return true;
         }
+
+        return false;
+    }
+
+    private void OpenMainWindow()
+    {
+        var mainWindow = new MainWindow();
+        mainWindow.Show();
+        this.Close();
     }
 
     private void ShowAlert(string message)
     {
         txtAlert.Text = message;
         brdAlert.Visibility = Visibility.Visible;
+        btnLogin.IsEnabled = true;
+        txtLoginButton.Text = "ĐĂNG NHẬP";
     }
 
     private sealed class LoginResult
@@ -159,4 +143,3 @@ public partial class LoginWindow : Window
         public string RoleName { get; set; } = string.Empty;
     }
 }
-

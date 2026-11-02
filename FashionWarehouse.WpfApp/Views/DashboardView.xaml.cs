@@ -39,12 +39,18 @@ public partial class DashboardView : UserControl
                 RenderChart(summary.DailyMovements);
             }
 
-            dgAlerts.ItemsSource = alerts ?? GetFallbackAlerts();
+            dgAlerts.ItemsSource = alerts ?? new List<InventoryAlertDto>();
         }
-        catch
+        catch (Exception ex)
         {
-            // Nếu API chưa bật, tải dữ liệu demo mẫu để giao diện luôn sống động
-            LoadFallbackData();
+            txtSkuCount.Text = "—";
+            txtInventoryQuantity.Text = "—";
+            txtLowStockCount.Text = "—";
+            txtInventoryValue.Text = "—";
+            icMovementChart.ItemsSource = Array.Empty<ChartColumnViewModel>();
+            dgAlerts.ItemsSource = Array.Empty<InventoryAlertDto>();
+            MessageBox.Show($"Không thể tải số liệu dashboard từ API: {ex.Message}",
+                "Không có dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
@@ -52,7 +58,7 @@ public partial class DashboardView : UserControl
     {
         if (movements == null || movements.Count == 0)
         {
-            RenderFallbackChart();
+            icMovementChart.ItemsSource = Array.Empty<ChartColumnViewModel>();
             return;
         }
 
@@ -68,50 +74,6 @@ public partial class DashboardView : UserControl
             ExportTooltip = $"Xuất: {x.Exports} cái"
         }).ToList();
     }
-
-    private void LoadFallbackData()
-    {
-        txtSkuCount.Text = "1,248";
-        txtInventoryQuantity.Text = "18,650";
-        txtLowStockCount.Text = "14 SKU";
-        txtInventoryValue.Text = "2.85 Tỷ";
-
-        RenderFallbackChart();
-        dgAlerts.ItemsSource = GetFallbackAlerts();
-    }
-
-    private void RenderFallbackChart()
-    {
-        var dummy = new List<ChartColumnViewModel>();
-        var now = DateTime.Today;
-        var r = new Random(42);
-
-        for (int i = 13; i >= 0; i--)
-        {
-            var day = now.AddDays(-i);
-            int imp = r.Next(20, 150);
-            int exp = r.Next(15, 120);
-
-            dummy.Add(new ChartColumnViewModel
-            {
-                DateLabel = day.ToString("dd/MM"),
-                ImportHeight = (imp / 150.0) * 90.0,
-                ExportHeight = (exp / 150.0) * 90.0,
-                ImportTooltip = $"Nhập: {imp} cái",
-                ExportTooltip = $"Xuất: {exp} cái"
-            });
-        }
-
-        icMovementChart.ItemsSource = dummy;
-    }
-
-    private static List<InventoryAlertDto> GetFallbackAlerts() => new()
-    {
-        new() { SKU = "POLO01-BLK-M", ProductName = "Áo Polo Nam Classic Cotton", ColorName = "Đen", SizeName = "M", LocationCode = "KHO-A-01", QuantityOnHand = 3, SafetyStock = 10 },
-        new() { SKU = "POLO01-WHT-L", ProductName = "Áo Polo Nam Classic Cotton", ColorName = "Trắng", SizeName = "L", LocationCode = "KHO-A-01", QuantityOnHand = 5, SafetyStock = 15 },
-        new() { SKU = "SM-OXF-BLU-S", ProductName = "Áo Sơ Mi Oxford Dài Tay", ColorName = "Xanh", SizeName = "S", LocationCode = "KHO-B-01", QuantityOnHand = 2, SafetyStock = 10 },
-        new() { SKU = "JEAN-SLIM-31", ProductName = "Quần Jeans Slimfit Co Giãn", ColorName = "Xanh Đậm", SizeName = "31", LocationCode = "KHO-C-02", QuantityOnHand = 4, SafetyStock = 12 }
-    };
 
     private async void BtnExportExcel_Click(object sender, RoutedEventArgs e)
     {
@@ -162,7 +124,7 @@ public partial class DashboardView : UserControl
 
     private sealed class DailyMovementDto
     {
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
         public int Imports { get; set; }
         public int Exports { get; set; }
     }

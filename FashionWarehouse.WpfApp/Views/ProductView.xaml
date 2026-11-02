@@ -12,95 +12,145 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Thanh tìm kiếm & tác vụ -->
-        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+        <!-- Thanh tiêu đề & nút hành động -->
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="16,12" Margin="0,0,0,14">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="320"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-
-                <TextBox Grid.Column="0" Text="Tìm theo SKU, tên áo..." Height="36" Padding="8,6" Foreground="#64748B"/>
-
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button Name="btnGenerate" Click="BtnGenerate_Click" Height="36" Margin="0,0,10,0" Background="#3B82F6" Foreground="White" BorderThickness="0" Padding="14,0" Cursor="Hand">
-                        <TextBlock Text="Sinh biến thể (SKU Explosion)" FontWeight="SemiBold"/>
+                <StackPanel>
+                    <TextBlock Text="Quản Lý Sản Phẩm &amp; Biến Thể SKU" FontWeight="Bold" FontSize="15" Foreground="#1E293B"/>
+                    <TextBlock Text="Nhập thông tin → Chọn màu + size → Bấm &quot;Tạo Ma Trận&quot; → Lưu vào CSDL" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Name="btnGenerate" Click="BtnGenerate_Click" Height="38" Margin="0,0,10,0"
+                            Background="#3B82F6" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                        <TextBlock Text="⚡ Tạo Ma Trận Biến Thể" FontWeight="SemiBold"/>
                     </Button>
-                    <Button Height="36" Background="#10B981" Foreground="White" BorderThickness="0" Padding="14,0" Cursor="Hand">
-                        <TextBlock Text="In toàn bộ mã vạch Barcode" FontWeight="SemiBold"/>
+                    <Button Height="38" Background="#10B981" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand"
+                            Click="BtnSaveToDb_Click">
+                        <TextBlock Text="💾 Lưu Vào CSDL" FontWeight="SemiBold"/>
                     </Button>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- Nội dung chia 2 cột -->
+        <!-- Nội dung chính chia 2 cột -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="360"/>
+                <ColumnDefinition Width="340"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Cột trái: Form thông tin -->
-            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="18" Margin="0,0,16,0">
+            <!-- ===== CỘT TRÁI: Form thông tin sản phẩm ===== -->
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="18" Margin="0,0,14,0">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <TextBlock Text="Thông Tin Mẫu Áo Quần" FontWeight="Bold" FontSize="16" Foreground="#1E293B" Margin="0,0,0,14"/>
+                        <TextBlock Text="Thông Tin Mẫu Sản Phẩm" FontWeight="Bold" FontSize="14"
+                                   Foreground="#1E293B" Margin="0,0,0,16"/>
 
-                        <TextBlock Text="Mã sản phẩm:" Foreground="#64748B" Margin="0,0,0,4"/>
-                        <TextBox Name="txtProductCode" Text="POLO01" Height="34" Padding="6" Margin="0,0,0,12"/>
+                        <!-- Mã sản phẩm -->
+                        <TextBlock Text="Mã sản phẩm *" Foreground="#64748B" FontSize="12" Margin="0,0,0,4"/>
+                        <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Background="#F8FAFC" Padding="8,4" Margin="0,0,0,12">
+                            <TextBox Name="txtProductCode" Text="POLO01" FontSize="14" BorderThickness="0"
+                                     Background="Transparent" VerticalContentAlignment="Center"/>
+                        </Border>
 
-                        <TextBlock Text="Tên sản phẩm:" Foreground="#64748B" Margin="0,0,0,4"/>
-                        <TextBox Name="txtProductName" Text="Áo Polo Nam Classic Cotton" Height="34" Padding="6" Margin="0,0,0,12"/>
+                        <!-- Tên sản phẩm -->
+                        <TextBlock Text="Tên sản phẩm *" Foreground="#64748B" FontSize="12" Margin="0,0,0,4"/>
+                        <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Background="#F8FAFC" Padding="8,4" Margin="0,0,0,12">
+                            <TextBox Name="txtProductName" Text="Áo Polo Nam Classic Cotton" FontSize="13"
+                                     BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center"/>
+                        </Border>
 
-                        <TextBlock Text="Danh mục:" Foreground="#64748B" Margin="0,0,0,4"/>
-                        <ComboBox Height="34" SelectedIndex="0" Margin="0,0,0,12">
-                            <ComboBoxItem Content="Áo Thun / T-Shirt"/>
-                            <ComboBoxItem Content="Áo Sơ Mi"/>
-                            <ComboBoxItem Content="Quần Jeans"/>
-                        </ComboBox>
+                        <!-- Danh mục -->
+                        <TextBlock Text="Danh mục" Foreground="#64748B" FontSize="12" Margin="0,0,0,4"/>
+                        <ComboBox Name="cboCategory" Height="36" SelectedIndex="0" Margin="0,0,0,14"
+                                  DisplayMemberPath="CategoryName" FontSize="13"
+                                  VerticalContentAlignment="Center"/>
 
-                        <Grid Margin="0,0,0,14">
+                        <!-- Giá vốn & Giá bán -->
+                        <Grid Margin="0,0,0,16">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="10"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="Giá vốn:" Foreground="#64748B" Margin="0,0,0,4"/>
-                                <TextBox Text="120,000" Height="34" Padding="6"/>
+                                <TextBlock Text="Giá vốn (đ)" Foreground="#64748B" FontSize="12" Margin="0,0,0,4"/>
+                                <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Background="#F8FAFC" Padding="8,4">
+                                    <TextBox Name="txtCostPrice" Text="120000" FontSize="13" BorderThickness="0"
+                                             Background="Transparent" VerticalContentAlignment="Center"/>
+                                </Border>
                             </StackPanel>
                             <StackPanel Grid.Column="2">
-                                <TextBlock Text="Giá bán:" Foreground="#64748B" Margin="0,0,0,4"/>
-                                <TextBox Text="250,000" Height="34" Padding="6"/>
+                                <TextBlock Text="Giá bán (đ)" Foreground="#64748B" FontSize="12" Margin="0,0,0,4"/>
+                                <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Background="#F8FAFC" Padding="8,4">
+                                    <TextBox Name="txtSalePrice" Text="250000" FontSize="13" BorderThickness="0"
+                                             Background="Transparent" VerticalContentAlignment="Center"/>
+                                </Border>
                             </StackPanel>
                         </Grid>
 
-                        <Separator Margin="0,4,0,14"/>
+                        <Separator Background="#E2E8F0" Margin="0,0,0,16"/>
 
-                        <TextBlock Text="Chọn Màu Sắc:" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,8"/>
-                        <WrapPanel Margin="0,0,0,14">
-                            <CheckBox Name="chkWhite" Content="Trắng (WHT)" IsChecked="True" Margin="0,0,12,6"/>
-                            <CheckBox Name="chkBlack" Content="Đen (BLK)" IsChecked="True" Margin="0,0,12,6"/>
-                            <CheckBox Name="chkNavy" Content="Xanh (NAV)" IsChecked="True" Margin="0,0,12,6"/>
-                        </WrapPanel>
+                        <!-- Chọn màu -->
+                        <TextBlock Text="🎨 Chọn Màu Sắc" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,10"/>
+                        <Border Background="#F8FAFC" CornerRadius="6" Padding="12" Margin="0,0,0,14">
+                            <StackPanel>
+                                <CheckBox Name="chkWhite" Content="⬜  Trắng (WHT)" IsChecked="True" Margin="0,0,0,8" FontSize="13"/>
+                                <CheckBox Name="chkBlack" Content="⬛  Đen (BLK)"   IsChecked="True" Margin="0,0,0,8" FontSize="13"/>
+                                <CheckBox Name="chkNavy"  Content="🟦  Xanh Navy (NAV)" IsChecked="True" FontSize="13"/>
+                            </StackPanel>
+                        </Border>
 
-                        <TextBlock Text="Chọn Kích Cỡ (Sizes):" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,8"/>
-                        <WrapPanel Margin="0,0,0,18">
-                            <CheckBox Name="chkS" Content="S" IsChecked="True" Margin="0,0,14,6"/>
-                            <CheckBox Name="chkM" Content="M" IsChecked="True" Margin="0,0,14,6"/>
-                            <CheckBox Name="chkL" Content="L" IsChecked="True" Margin="0,0,14,6"/>
-                            <CheckBox Name="chkXL" Content="XL" IsChecked="True" Margin="0,0,14,6"/>
-                        </WrapPanel>
+                        <!-- Chọn size -->
+                        <TextBlock Text="📏 Chọn Kích Cỡ" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,10"/>
+                        <Border Background="#F8FAFC" CornerRadius="6" Padding="12" Margin="0,0,0,18">
+                            <WrapPanel>
+                                <CheckBox Name="chkS"  Content="S"  IsChecked="True" Margin="0,0,18,6" FontSize="13" FontWeight="SemiBold"/>
+                                <CheckBox Name="chkM"  Content="M"  IsChecked="True" Margin="0,0,18,6" FontSize="13" FontWeight="SemiBold"/>
+                                <CheckBox Name="chkL"  Content="L"  IsChecked="True" Margin="0,0,18,6" FontSize="13" FontWeight="SemiBold"/>
+                                <CheckBox Name="chkXL" Content="XL" IsChecked="True" Margin="0,0,0,6"  FontSize="13" FontWeight="SemiBold"/>
+                            </WrapPanel>
+                        </Border>
 
-                        <Button Click="BtnGenerate_Click" Height="40" Background="#2563EB" Foreground="White" BorderThickness="0" Cursor="Hand">
-                            <TextBlock Text="+ Tạo &amp; Lưu Vào CSDL" FontWeight="Bold"/>
+                        <!-- Nút tạo -->
+                        <Button Click="BtnGenerate_Click" Height="42" Background="#2563EB" Foreground="White"
+                                BorderThickness="0" Cursor="Hand" Margin="0,0,0,8">
+                            <TextBlock Text="⚡  Tạo Ma Trận Biến Thể SKU" FontWeight="Bold" FontSize="13"/>
                         </Button>
+                        <Button Click="BtnSaveToDb_Click" Height="42" Background="#10B981" Foreground="White"
+                                BorderThickness="0" Cursor="Hand">
+                            <TextBlock Text="💾  Lưu Sản Phẩm Vào CSDL" FontWeight="Bold" FontSize="13"/>
+                        </Button>
+
+                        <!-- Thông báo -->
+                        <Border Name="brdMessage" Visibility="Collapsed" CornerRadius="6"
+                                Padding="12,10" Margin="0,12,0,0">
+                            <TextBlock Name="txtMessage" FontSize="12" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                        </Border>
+
+                        <!-- Preview Barcode lớn -->
+                        <Border Name="brdBarcodePreview" Visibility="Collapsed" Background="#F8FAFC"
+                                CornerRadius="8" Padding="14" Margin="0,14,0,0"
+                                BorderBrush="#E2E8F0" BorderThickness="1">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="Preview Barcode" FontSize="11" Foreground="#64748B"
+                                           HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                <TextBlock Name="txtBarcodeSku" Text="" FontWeight="Bold" FontSize="12"
+                                           Foreground="#1E293B" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                                <Image Name="imgBarcode" Width="240" Height="90" Stretch="Uniform"/>
+                                <TextBlock Name="txtBarcodeValue" Text="" FontSize="10" Foreground="#64748B"
+                                           HorizontalAlignment="Center" Margin="0,6,0,0" FontFamily="Consolas"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </ScrollViewer>
             </Border>
 
-            <!-- Cột phải: DataGrid SKU -->
+            <!-- ===== CỘT PHẢI: Bảng SKU đã sinh ===== -->
             <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="18">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -108,27 +158,80 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
-                        <TextBlock Text="Ma Trận Biến Thể SKU Đã Sinh Ra" FontWeight="Bold" FontSize="16" Foreground="#1E293B"/>
-                        <TextBlock Name="txtTotalCount" Text=" (12 biến thể)" Foreground="#2563EB" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Center"/>
-                    </StackPanel>
+                    <!-- Header bảng -->
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Ma Trận Biến Thể SKU" FontWeight="Bold" FontSize="15" Foreground="#1E293B" VerticalAlignment="Center"/>
+                            <TextBlock Name="txtTotalCount" Text="" Foreground="#2563EB" FontWeight="Bold"
+                                       Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" Text="👆 Click dòng để xem Barcode lớn" 
+                                   FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center"/>
+                    </Grid>
 
-                    <DataGrid Grid.Row="1" Name="dgVariants" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                    <!-- DataGrid SKU -->
+                    <DataGrid Grid.Row="1" Name="dgVariants" AutoGenerateColumns="False"
+                              CanUserAddRows="False" IsReadOnly="True"
                               HeadersVisibility="Column" GridLinesVisibility="Horizontal"
                               HorizontalGridLinesBrush="#F1F5F9" Background="Transparent"
-                              RowHeight="44" BorderThickness="0">
+                              RowHeight="52" BorderThickness="0"
+                              SelectionChanged="DgVariants_SelectionChanged">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã SKU" Binding="{Binding SKU}" FontWeight="Bold" Width="140"/>
-                            <DataGridTextColumn Header="Màu" Binding="{Binding ColorName}" Width="80"/>
-                            <DataGridTextColumn Header="Size" Binding="{Binding SizeName}" Width="60"/>
-                            <DataGridTextColumn Header="Giá Bán" Binding="{Binding SalePrice, StringFormat={}{0:N0} đ}" Width="100"/>
-                            <DataGridTextColumn Header="Mã Vạch Quét Súng (Barcode)" Binding="{Binding Barcode}" FontWeight="SemiBold" Width="180"/>
-                            <DataGridTemplateColumn Header="Thao tác" Width="*">
+                            <DataGridTextColumn Header="Mã SKU" Binding="{Binding SKU}" FontWeight="Bold" Width="160">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#2563EB"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Màu" Binding="{Binding ColorName}" Width="90">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock"><Setter Property="VerticalAlignment" Value="Center"/></Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Size" Binding="{Binding SizeName}" Width="55">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock"><Setter Property="VerticalAlignment" Value="Center"/></Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Giá Vốn" Binding="{Binding CostPrice, StringFormat={}{0:N0} đ}" Width="100">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock"><Setter Property="VerticalAlignment" Value="Center"/></Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Giá Bán" Binding="{Binding SalePrice, StringFormat={}{0:N0} đ}" Width="100">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#10B981"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Mã Barcode" Binding="{Binding Barcode}" Width="130">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="FontFamily" Value="Consolas"/>
+                                        <Setter Property="FontSize" Value="12"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn Header="Hình Barcode" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Height="28" Padding="8,0" Background="#EFF6FF" Foreground="#2563EB" BorderThickness="0" Cursor="Hand">
-                                            <TextBlock Text="In tem Barcode" FontSize="12"/>
-                                        </Button>
+                                        <Image Source="{Binding BarcodeImage}" Height="38" Stretch="Uniform"
+                                               HorizontalAlignment="Left" Margin="4,4"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

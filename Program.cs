@@ -31,6 +31,8 @@ builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IExcelReportService, ClosedXmlReportService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
@@ -47,14 +49,7 @@ app.MapGet("/", () => new
 {
     Application = "Fashion Warehouse Management (.NET 10 - MySQL)",
     Status = "Running",
-    CurrentTime = DateTime.Now
-});
-
-app.MapPost("/api/test-sku-matrix", (BarcodeGeneratorService service) =>
-{
-    var colors = new List<(int Id, string Name)> { (1, "WHT"), (2, "BLK") };
-    var sizes = new List<(int Id, string Name)> { (1, "S"), (2, "M"), (3, "L") };
-    return Results.Ok(service.GenerateMatrix("POLO01", colors, sizes, 120000, 250000));
+    CurrentTime = DateTime.UtcNow
 });
 
 app.Run();

@@ -41,16 +41,19 @@
                     <Button Name="btnProducts" Click="BtnProducts_Click" Tag="Products" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
                         <TextBlock Text="👕  Quản lý Sản phẩm &amp; SKU"/>
                     </Button>
+                    <Button Name="btnCategories" Click="BtnCategories_Click" Tag="Categories" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                        <TextBlock Text="📂  Quản lý Danh mục"/>
+                    </Button>
                     <Button Name="btnReceipts" Click="BtnReceipts_Click" Tag="Receipts" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
                         <TextBlock Text="▤   Nhập / Xuất Kho"/>
                     </Button>
-                    <Button Click="BtnComingSoon_Click" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                    <Button Name="btnInventory" Click="BtnInventory_Click" Tag="Inventory" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
                         <TextBlock Text="▦   Tồn kho &amp; Vị trí kệ"/>
                     </Button>
-                    <Button Click="BtnComingSoon_Click" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                    <Button Name="btnReports" Click="BtnReports_Click" Tag="Reports" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
                         <TextBlock Text="▥   Báo cáo &amp; Thống kê"/>
                     </Button>
-                    <Button Click="BtnComingSoon_Click" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                    <Button Name="btnEmployees" Click="BtnEmployees_Click" Tag="Employees" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
                         <TextBlock Text="♙   Nhân viên &amp; Phân quyền"/>
                     </Button>
                 </StackPanel>
@@ -108,3 +111,4 @@
         </Grid>
     </Grid>
 </Window>
+

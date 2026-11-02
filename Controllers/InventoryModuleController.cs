@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using NetProject.DAL;
 using Microsoft.AspNetCore.Mvc;
 using NetProject.DTOs;
 using NetProject.Services;
@@ -11,10 +13,12 @@ namespace NetProject.Controllers;
 public sealed class InventoryTransactionsController : ControllerBase
 {
     private readonly IInventoryService _inventoryService;
+    private readonly IDashboardService _dashboardService;
 
-    public InventoryTransactionsController(IInventoryService inventoryService)
+    public InventoryTransactionsController(IInventoryService inventoryService, IDashboardService dashboardService)
     {
         _inventoryService = inventoryService;
+        _dashboardService = dashboardService;
     }
 
     [HttpPost("transactions")]
@@ -56,6 +60,25 @@ public sealed class InventoryTransactionsController : ControllerBase
         }
     }
 
+    [HttpGet("statuses")]
+    public async Task<ActionResult<IReadOnlyList<InventoryStatusDto>>> GetStatuses(
+        [FromQuery] string? search,
+        [FromQuery] string? locationCode,
+        [FromQuery] bool lowStockOnly = false,
+        [FromQuery] int take = 5000)
+    {
+        if (take is < 1 or > 5000)
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Giới hạn truy vấn không hợp lệ",
+                Detail = "Tham số take phải từ 1 đến 5000.",
+                Status = StatusCodes.Status400BadRequest
+            });
+
+        var statuses = await _dashboardService.GetInventoryStatusesAsync(search, locationCode, lowStockOnly, take);
+        return Ok(statuses);
+    }
+
     [HttpGet("barcode/{barcode}")]
     public async Task<ActionResult<InventoryStatusDto>> FindBarcode(
         string barcode,
@@ -78,8 +101,21 @@ public sealed class DashboardController : ControllerBase
     }
 
     [HttpGet("summary")]
-    public Task<DashboardSummaryDto> Summary(CancellationToken cancellationToken) =>
-        _dashboardService.GetSummaryAsync();
+    public async Task<ActionResult<DashboardSummaryDto>> Summary(
+        [FromQuery] DateOnly? from,
+        [FromQuery] DateOnly? to,
+        CancellationToken cancellationToken)
+    {
+        if (from.HasValue && to.HasValue && from > to)
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Khoảng ngày không hợp lệ",
+                Detail = "Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.",
+                Status = StatusCodes.Status400BadRequest
+            });
+
+        return Ok(await _dashboardService.GetSummaryAsync(from, to));
+    }
 
     [HttpGet("low-stock")]
     public Task<IReadOnlyList<InventoryStatusDto>> LowStock([FromQuery] int take = 100) =>

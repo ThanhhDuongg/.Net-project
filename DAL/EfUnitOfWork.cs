@@ -213,18 +213,30 @@ public sealed class EfReportRepository : IReportRepository
         var start = from.ToDateTime(TimeOnly.MinValue);
         var endExclusive = to.AddDays(1).ToDateTime(TimeOnly.MinValue);
 
-        return _context.InventoryTransactions.AsNoTracking()
+        var transactions = _context.InventoryTransactions.AsNoTracking()
             .Where(txn => txn.OccurredAt >= start && txn.OccurredAt < endExclusive)
+            .Select(txn => new
+            {
+                txn.OccurredAt,
+                txn.TransactionType,
+                txn.QuantityChange
+            })
+            .ToList();
+
+        var dailyMovements = transactions
             .GroupBy(txn => txn.OccurredAt.Date)
             .OrderBy(daily => daily.Key)
             .Select(daily => new DashboardChartPointDto
             {
                 Date = daily.Key,
                 Imports = daily.Where(x => x.TransactionType == InventoryTransactionType.IMPORT)
-                    .Select(x => (int?)x.QuantityChange).Sum() ?? 0,
+                    .Sum(x => x.QuantityChange),
                 Exports = daily.Where(x => x.TransactionType == InventoryTransactionType.EXPORT)
-                    .Select(x => (int?)-x.QuantityChange).Sum() ?? 0
-            });
+                    .Sum(x => -x.QuantityChange)
+            })
+            .ToList();
+
+        return dailyMovements.AsQueryable();
     }
 
     /// <summary>

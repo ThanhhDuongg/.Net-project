@@ -1,6 +1,55 @@
 @NetProject_HostAddress = http://localhost:5116
 
-GET {{NetProject_HostAddress}}/weatherforecast/
+### 1. Kiểm tra trạng thái máy chủ Backend
+GET {{NetProject_HostAddress}}/
 Accept: application/json
 
-###
+### 2. Đăng nhập hệ thống (Quản trị viên)
+POST {{NetProject_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password"
+}
+
+### 3. Đăng nhập hệ thống (Thủ kho)
+POST {{NetProject_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "thukho",
+  "password": "password"
+}
+
+### 4. Lấy danh sách sản phẩm & SKU
+GET {{NetProject_HostAddress}}/api/products
+Accept: application/json
+
+### 5. Lấy danh mục sản phẩm thời trang
+GET {{NetProject_HostAddress}}/api/categories
+Accept: application/json
+
+### 6. Thống kê tổng quan Dashboard kho
+GET {{NetProject_HostAddress}}/api/dashboard/summary
+Accept: application/json
+
+### 7. Tra cứu trạng thái tồn kho & vị trí kệ
+GET {{NetProject_HostAddress}}/api/inventory
+Accept: application/json
+
+### 8. Lịch sử giao dịch biến động thẻ kho
+GET {{NetProject_HostAddress}}/api/reports/transactions
+Accept: application/json
+
+### 9. Danh sách tài khoản nhân sự & vai trò
+GET {{NetProject_HostAddress}}/api/users
+Accept: application/json
+
+### 10. Danh mục chức vụ (Roles)
+GET {{NetProject_HostAddress}}/api/roles
+Accept: application/json
+
+### 11. Bảng ma trận phân quyền hệ thống (RBAC)
+GET {{NetProject_HostAddress}}/api/roles/permissions
+Accept: application/json

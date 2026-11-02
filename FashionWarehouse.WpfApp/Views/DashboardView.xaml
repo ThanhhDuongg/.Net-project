@@ -28,7 +28,7 @@
             <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <TextBlock Text="TỔNG BIẾN THỂ (SKU)" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
-                    <TextBlock x:Name="txtSkuCount" Text="1,248" FontSize="24" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
+                    <TextBlock x:Name="txtSkuCount" Text="—" FontSize="24" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
                     <TextBlock Text="Đang lưu hành" FontSize="11" Foreground="#10B981" Margin="0,4,0,0"/>
                 </StackPanel>
             </Border>
@@ -36,7 +36,7 @@
             <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <TextBlock Text="TỒN KHO THỰC TẾ" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
-                    <TextBlock x:Name="txtInventoryQuantity" Text="18,650" FontSize="24" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
+                    <TextBlock x:Name="txtInventoryQuantity" Text="—" FontSize="24" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
                     <TextBlock Text="Cái/Bộ sản phẩm" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
                 </StackPanel>
             </Border>
@@ -44,7 +44,7 @@
             <Border Grid.Column="4" Background="White" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <TextBlock Text="CẢNH BÁO HẾT HÀNG" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
-                    <TextBlock x:Name="txtLowStockCount" Text="14 SKU" FontSize="24" FontWeight="Bold" Foreground="#EF4444" Margin="0,6,0,0"/>
+                    <TextBlock x:Name="txtLowStockCount" Text="—" FontSize="24" FontWeight="Bold" Foreground="#EF4444" Margin="0,6,0,0"/>
                     <TextBlock Text="Tồn dưới ngưỡng an toàn" FontSize="11" Foreground="#EF4444" Margin="0,4,0,0"/>
                 </StackPanel>
             </Border>
@@ -52,7 +52,7 @@
             <Border Grid.Column="6" Background="White" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <TextBlock Text="TỔNG GIÁ TRỊ TỒN" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
-                    <TextBlock x:Name="txtInventoryValue" Text="2.85 Tỷ" FontSize="24" FontWeight="Bold" Foreground="#2563EB" Margin="0,6,0,0"/>
+                    <TextBlock x:Name="txtInventoryValue" Text="—" FontSize="24" FontWeight="Bold" Foreground="#2563EB" Margin="0,6,0,0"/>
                     <TextBlock Text="Tính theo giá vốn" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
                 </StackPanel>
             </Border>
