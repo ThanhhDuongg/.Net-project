@@ -16,6 +16,7 @@ public interface IReadRepository<TEntity>
 public interface IInventoryRepository : IReadRepository<Inventory>
 {
     IQueryable<Inventory> AsTracking();
+    void Add(Inventory inventory);
 
     Task<Inventory?> FindByVariantAndLocationAsync(
         int variantId,
@@ -123,6 +124,7 @@ public sealed class InMemoryUnitOfWork : IUnitOfWork
         public Task<Inventory?> FindAsync(object id, CancellationToken cancellationToken = default) => Task.FromResult<Inventory?>(null);
         public IQueryable<Inventory> AsNoTracking() => Array.Empty<Inventory>().AsQueryable();
         public IQueryable<Inventory> AsTracking() => Array.Empty<Inventory>().AsQueryable();
+        public void Add(Inventory inventory) { }
         public Task<Inventory?> FindByVariantAndLocationAsync(int variantId, int locationId, bool asNoTracking, CancellationToken cancellationToken = default) => Task.FromResult<Inventory?>(null);
     }
 

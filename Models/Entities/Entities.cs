@@ -221,6 +221,36 @@ public class InventoryTransaction
     public int PerformedByUserId { get; set; }
 }
 
+public class Customer
+{
+    [Key]
+    public int CustomerId { get; set; }
+
+    [Required, MaxLength(30)]
+    public string CustomerCode { get; set; } = string.Empty;
+
+    [Required, MaxLength(150)]
+    public string CustomerName { get; set; } = string.Empty;
+
+    [Required, MaxLength(50)]
+    public string CustomerType { get; set; } = "Đại lý cấp 1";
+
+    [MaxLength(20)]
+    public string? PhoneNumber { get; set; }
+
+    [MaxLength(100)]
+    public string? Email { get; set; }
+
+    [MaxLength(255)]
+    public string? Address { get; set; }
+
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal DebtAmount { get; set; } = 0;
+
+    public bool IsActive { get; set; } = true;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+}
+
 public class Supplier
 {
     [Key]

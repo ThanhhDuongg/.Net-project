@@ -107,6 +107,7 @@ public sealed class EfInventoryRepository : IInventoryRepository
 
     public IQueryable<Inventory> AsNoTracking() => _context.Inventories.AsNoTracking();
     public IQueryable<Inventory> AsTracking() => _context.Inventories;
+    public void Add(Inventory inventory) => _context.Inventories.Add(inventory);
 
     public Task<Inventory?> FindByVariantAndLocationAsync(
         int variantId,
@@ -183,7 +184,8 @@ public sealed class EfReportRepository : IReportRepository
             SizeName = size.SizeName,
             LocationCode = location.LocationCode,
             QuantityOnHand = inventory.QuantityOnHand,
-            SafetyStock = inventory.SafetyStock
+            SafetyStock = inventory.SafetyStock,
+            CostPrice = variant.CostPrice
         };
 
     public IQueryable<InventoryReportRowDto> GetInventoryReportRows() =>

@@ -62,14 +62,34 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- Hàng 2: Các nút bấm chọn nhanh (Quick-Pick) các mẫu phổ biến -->
-                <WrapPanel Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center">
-                    <TextBlock Text="Chọn nhanh mẫu test: " FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                    <Button Click="BtnQuickAdd_Click" Tag="893600100101" Content="Áo Polo Đen (M)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
-                    <Button Click="BtnQuickAdd_Click" Tag="893600100102" Content="Áo Polo Đen (L)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
-                    <Button Click="BtnQuickAdd_Click" Tag="893600100103" Content="Áo Polo Trắng (M)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
-                    <Button Click="BtnQuickAdd_Click" Tag="893600100104" Content="Áo Polo Trắng (L)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
-                </WrapPanel>
+                <!-- Hàng 2: Các nút bấm chọn nhanh + Nút kết nối điện thoại -->
+                <Grid Grid.Row="1" Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="Chọn nhanh mẫu test: " FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <Button Click="BtnQuickAdd_Click" Tag="893600100101" Content="Áo Polo Đen (M)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
+                        <Button Click="BtnQuickAdd_Click" Tag="893600100102" Content="Áo Polo Đen (L)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
+                        <Button Click="BtnQuickAdd_Click" Tag="893600100103" Content="Áo Polo Trắng (M)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
+                        <Button Click="BtnQuickAdd_Click" Tag="893600100104" Content="Áo Polo Trắng (L)" Background="#F1F5F9" Foreground="#1E293B" BorderThickness="0" Padding="8,4" Margin="0,0,6,0" Cursor="Hand" FontSize="11"/>
+                    </WrapPanel>
+
+                    <!-- Nút mở hướng dẫn quét bằng điện thoại -->
+                    <Button Grid.Column="1" Click="BtnMobileScan_Click" Background="#8B5CF6" Foreground="White" BorderThickness="0" Padding="12,5" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📱 Quét bằng Camera Điện thoại" FontWeight="Bold" FontSize="12"/>
+                            <Border Name="brdSignalRStatus" Width="8" Height="8" CornerRadius="4" Background="#EF4444" Margin="8,0,0,0" VerticalAlignment="Center" ToolTip="Trạng thái kết nối Realtime"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
             </Grid>
         </Border>
 
@@ -110,8 +130,12 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" Margin="0,0,0,12">
-                        <TextBlock Text="Danh Sách Mặt Hàng Trong Phiếu" FontWeight="Bold" FontSize="16" Foreground="#1E293B"/>
-                        <TextBlock Text="(Double-click dòng để xóa | Click nút để sửa số lượng)" HorizontalAlignment="Right" FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="lblTableTitle" Grid.Column="0" Text="Danh Sách Hàng Hóa Nhập Vào Kho (Theo Giá Vốn)" FontWeight="Bold" FontSize="15" Foreground="#1E293B" TextTrimming="CharacterEllipsis" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="(Double-click dòng để xóa | Click nút để sửa số lượng)" FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center"/>
                     </Grid>
 
                     <DataGrid Grid.Row="1" Name="dgReceiptItems" AutoGenerateColumns="False" CanUserAddRows="False"
@@ -135,23 +159,25 @@
             <!-- Cột phải: Thông tin phiếu & Nút chốt -->
             <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="18">
                 <StackPanel>
-                    <TextBlock Text="Thông Tin Phiếu Giao Dịch" FontWeight="Bold" FontSize="16" Foreground="#1E293B" Margin="0,0,0,14"/>
-
-                    <TextBlock Text="Loại Giao Dịch:" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,4"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                        <RadioButton Name="rdoImport" Content="Nhập Kho" IsChecked="True" Checked="TransactionType_Changed" Margin="0,0,18,0" FontWeight="SemiBold" Foreground="#10B981"/>
-                        <RadioButton Name="rdoExport" Content="Xuất Kho" Checked="TransactionType_Changed" FontWeight="SemiBold" Foreground="#EF4444"/>
+                    <!-- Badge phân biệt ngữ cảnh rõ ràng giữa Nhập kho & Xuất kho -->
+                    <Border x:Name="brdTransactionModeBadge" Background="#ECFDF5" BorderBrush="#10B981" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,14">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="lblModeIcon" Text="📥" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock x:Name="lblModeTitle" Text="PHIẾU NHẬP HÀNG TỪ NCC" FontWeight="Bold" FontSize="13" Foreground="#047857" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock x:Name="lblModeDesc" Text="Nhập hàng may mặc vào kho &amp; ghi nhận giá vốn" FontSize="11" Foreground="#065F46" Margin="24,2,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- Radio button ẩn để giữ tương thích logic code -->
+                    <StackPanel x:Name="pnlRadioType" Orientation="Horizontal" Visibility="Collapsed">
+                        <RadioButton Name="rdoImport" Content="Nhập Kho" IsChecked="True" Checked="TransactionType_Changed"/>
+                        <RadioButton Name="rdoExport" Content="Xuất Kho" Checked="TransactionType_Changed"/>
                     </StackPanel>
-
-                    <TextBlock Text="Mã phiếu:" Foreground="#64748B" Margin="0,0,0,4"/>
                     <TextBox Name="txtReceiptCode" Height="34" Padding="6" Margin="0,0,0,12"/>
 
-                    <TextBlock Text="Nhà cung cấp / Đối tác:" Foreground="#64748B" Margin="0,0,0,4"/>
-                    <ComboBox Name="cboPartner" Height="34" SelectedIndex="0" Margin="0,0,0,12">
-                        <ComboBoxItem Content="Công Ty May Mặc Việt Tiến"/>
-                        <ComboBoxItem Content="Tổng Công Ty Đức Giang"/>
-                        <ComboBoxItem Content="Khách mua buôn / Đại lý"/>
-                    </ComboBox>
+                    <TextBlock x:Name="lblPartnerHeader" Text="Nhà cung cấp:" Foreground="#64748B" Margin="0,0,0,4"/>
+                    <ComboBox Name="cboPartner" Height="34" Margin="0,0,0,12"/>
 
                     <TextBlock Text="Ghi chú chứng từ:" Foreground="#64748B" Margin="0,0,0,4"/>
                     <TextBox Name="txtNotes" Height="45" TextWrapping="Wrap" AcceptsReturn="True" Padding="6" Margin="0,0,0,16"/>
@@ -169,8 +195,17 @@
                         </StackPanel>
                     </Border>
 
-                    <Button Click="BtnCommit_Click" Height="44" Background="#10B981" Foreground="White" BorderThickness="0" Margin="0,0,0,8" Cursor="Hand">
-                        <TextBlock Text="LƯU &amp; HOÀN TẤT PHIẾU" FontWeight="Bold"/>
+                    <Button x:Name="btnCommit" Click="BtnCommit_Click" Height="44" Background="#10B981" Foreground="White" BorderThickness="0" Margin="0,0,0,8" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock x:Name="btnCommitText" Text="✅ HOÀN TẤT NHẬP KHO (IN PHIẾU)" FontWeight="Bold"/>
+                    </Button>
+
+                    <Button Click="BtnViewCurrentInvoice_Click" Height="36" Background="#EEF2FF" Foreground="#4F46E5" BorderThickness="0" Margin="0,0,0,8" Cursor="Hand">
+                        <TextBlock Text="🧾 Xem Hóa Đơn / Phiếu Chứng Từ" FontWeight="SemiBold"/>
                     </Button>
 
                     <Button Click="BtnReset_Click" Height="36" Background="#F1F5F9" Foreground="#64748B" BorderThickness="0" Cursor="Hand">

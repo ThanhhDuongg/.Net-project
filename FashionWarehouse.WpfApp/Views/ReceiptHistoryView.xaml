@@ -1,0 +1,126 @@
+<UserControl x:Class="FashionWarehouse.WpfApp.Views.ReceiptHistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F8FAFC">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Bộ lọc & Thao tác -->
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="LỊCH SỬ CHỨNG TỪ &amp; HÓA ĐƠN GIAO DỊCH" FontWeight="Bold" FontSize="16" Foreground="#1E293B" TextTrimming="CharacterEllipsis" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="(Double-click dòng hoặc bấm 'Xem Hóa Đơn' để xem bản in chi tiết)" FontSize="12" Foreground="#64748B" VerticalAlignment="Center"/>
+                </Grid>
+
+                <WrapPanel Grid.Row="1" VerticalAlignment="Center">
+                    <StackPanel Margin="0,0,15,0">
+                        <TextBlock Text="Loại phiếu:" FontSize="11" FontWeight="SemiBold" Foreground="#64748B" Margin="0,0,0,3"/>
+                        <ComboBox x:Name="cboFilterType" Width="140" Height="34" SelectedIndex="0" SelectionChanged="Filter_Changed">
+                            <ComboBoxItem Content="Tất cả phiếu"/>
+                            <ComboBoxItem Content="Chỉ phiếu Nhập Kho"/>
+                            <ComboBoxItem Content="Chỉ phiếu Xuất Kho"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,15,0">
+                        <TextBlock Text="Từ ngày:" FontSize="11" FontWeight="SemiBold" Foreground="#64748B" Margin="0,0,0,3"/>
+                        <DatePicker x:Name="dpFrom" Width="135" Height="34" SelectedDateChanged="Filter_Changed"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,15,0">
+                        <TextBlock Text="Đến ngày:" FontSize="11" FontWeight="SemiBold" Foreground="#64748B" Margin="0,0,0,3"/>
+                        <DatePicker x:Name="dpTo" Width="135" Height="34" SelectedDateChanged="Filter_Changed"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,15,0">
+                        <TextBlock Text="Tìm kiếm:" FontSize="11" FontWeight="SemiBold" Foreground="#64748B" Margin="0,0,0,3"/>
+                        <TextBox x:Name="txtSearch" Width="200" Height="34" Padding="6,0" VerticalContentAlignment="Center"
+                                 TextChanged="TxtSearch_TextChanged"/>
+                    </StackPanel>
+
+                    <Button Click="BtnRefresh_Click" Height="34" VerticalAlignment="Bottom" Background="#2563EB" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock Text="🔍 Tra Cứu" FontWeight="Bold"/>
+                    </Button>
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <!-- Bảng danh sách phiếu -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Danh Sách Phiếu Kho Đã Lập (" FontWeight="Bold" FontSize="14" Foreground="#1E293B"/>
+                        <TextBlock x:Name="lblReceiptCount" Text="0 phiếu" FontWeight="Bold" FontSize="14" Foreground="#2563EB"/>
+                        <TextBlock Text=")" FontWeight="Bold" FontSize="14" Foreground="#1E293B"/>
+                    </StackPanel>
+                    <TextBlock x:Name="lblStatus" Text="Sẵn sàng" HorizontalAlignment="Right" Foreground="#059669" FontSize="12" VerticalAlignment="Center"/>
+                </Grid>
+
+                <DataGrid x:Name="dgReceipts" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False"
+                          IsReadOnly="True" HeadersVisibility="Column" RowHeight="42"
+                          GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
+                          BorderThickness="0" Background="Transparent"
+                          MouseDoubleClick="DgReceipts_MouseDoubleClick">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Phiếu" Width="135" Binding="{Binding ReceiptCode}" FontWeight="Bold"/>
+                        <DataGridTemplateColumn Header="Loại Giao Dịch" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="4" Padding="8,3" HorizontalAlignment="Left"
+                                            Background="{Binding TypeBgColor}">
+                                        <TextBlock Text="{Binding TypeDisplay}" FontWeight="Bold" FontSize="11"
+                                                   Foreground="{Binding TypeFgColor}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Thời Gian Lập" Width="130" Binding="{Binding ReceiptDate, StringFormat={}{0:dd/MM/yyyy HH:mm}}"/>
+                        <DataGridTextColumn Header="Đối Tác / Khách Hàng" Width="*" Binding="{Binding PartnerName}" FontWeight="SemiBold"/>
+                        <DataGridTextColumn Header="Số Lượng" Width="85" Binding="{Binding TotalQuantity, StringFormat={}{0:N0} Cái}"/>
+                        <DataGridTextColumn Header="Tổng Tiền" Width="120" Binding="{Binding TotalAmount, StringFormat={}{0:N0} đ}" FontWeight="Bold"/>
+                        <DataGridTextColumn Header="Người Lập" Width="120" Binding="{Binding CreatorFullName}"/>
+                        <DataGridTemplateColumn Header="Thao Tác" Width="130">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="BtnViewInvoice_Click" Height="28" Background="#EEF2FF" Foreground="#4F46E5" BorderThickness="0" Padding="10,0" Cursor="Hand">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="4"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <TextBlock Text="🧾 Xem Hóa Đơn" FontSize="11" FontWeight="Bold"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
+

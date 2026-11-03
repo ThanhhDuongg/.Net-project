@@ -1,0 +1,110 @@
+<Window x:Class="FashionWarehouse.WpfApp.Views.BarcodePrintPreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Xem Trước Bản In Tem Mã Vạch (Barcode Print Preview)"
+        Height="720" Width="980"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI"
+        Background="#F1F5F9">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Thanh công cụ in ấn -->
+        <Border Grid.Row="0" Background="#1E293B" Padding="20,0">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="IN TEM MÃ VẠCH (BARCODE)" FontWeight="Bold" FontSize="16" Foreground="White"/>
+                    <Border Background="#334155" CornerRadius="12" Padding="10,3" Margin="14,0,0,0">
+                        <TextBlock Name="txtTotalLabels" Text="0 tem nhãn" Foreground="#38BDF8" FontSize="12" FontWeight="SemiBold"/>
+                    </Border>
+                    <TextBlock Text="• Khổ giấy chuẩn Decal 3 tem/hàng" FontSize="12" Foreground="#94A3B8" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Click="BtnPrint_Click" Height="38" Background="#10B981" Foreground="White" BorderThickness="0" Padding="18,0" Cursor="Hand" Margin="0,0,10,0">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🖨   Gửi Lệnh In / Xuất PDF" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Click="BtnClose_Click" Height="38" Background="#475569" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock Text="Đóng" FontWeight="SemiBold"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Khu vực giấy in tem nhãn (Mô phỏng tờ giấy decal in mã vạch) -->
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="25">
+            <Border Name="printArea" Background="White" Width="880" MinHeight="1050" Padding="25" Margin="0,0,0,30" BorderBrush="#CBD5E1" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.1" Color="#000000"/>
+                </Border.Effect>
+                <StackPanel>
+                    <!-- Tiêu đề trang in -->
+                    <Grid Margin="0,0,0,18">
+                        <StackPanel>
+                            <TextBlock Text="FASHION WMS - TEM NHÃN MÃ VẠCH SẢN PHẨM" FontWeight="Bold" FontSize="14" Foreground="#0F172A"/>
+                            <TextBlock Name="txtPrintHeader" Text="Mẫu: Áo Polo Nam Classic Cotton (POLO01)" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <TextBlock Name="txtPrintDate" Text="Ngày in: 02/11/2026" FontSize="11" Foreground="#94A3B8" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                    </Grid>
+
+                    <Separator Margin="0,0,0,20"/>
+
+                    <!-- Danh sách lưới tem nhãn (3 tem 1 dòng) -->
+                    <ItemsControl Name="icLabels">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel ItemWidth="270" ItemHeight="155"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#94A3B8" BorderThickness="1" CornerRadius="4" Margin="5" Padding="10,8" Background="White">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <!-- Tên sản phẩm tóm tắt -->
+                                        <TextBlock Text="{Binding ProductName}" FontWeight="Bold" FontSize="11" Foreground="#0F172A" TextTrimming="CharacterEllipsis"/>
+                                        
+                                        <!-- SKU + Thuộc tính -->
+                                        <Grid Margin="0,2,0,2">
+                                            <TextBlock Text="{Binding SKU}" FontWeight="SemiBold" FontSize="11" Foreground="#2563EB"/>
+                                            <TextBlock Text="{Binding VariantSummary}" FontSize="11" Foreground="#475569" HorizontalAlignment="Right"/>
+                                        </Grid>
+
+                                        <!-- Ảnh mã vạch đồ họa -->
+                                        <Image Source="{Binding BarcodeImage}" Height="40" Margin="0,3" Stretch="Uniform" HorizontalAlignment="Center"/>
+
+                                        <!-- Số mã vạch -->
+                                        <TextBlock Text="{Binding Barcode}" HorizontalAlignment="Center" FontSize="11" FontWeight="SemiBold" Foreground="#1E293B"/>
+
+                                        <!-- Giá niêm yết -->
+                                        <TextBlock Text="{Binding PriceText}" HorizontalAlignment="Center" FontWeight="Bold" FontSize="11" Foreground="#DC2626" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</Window>

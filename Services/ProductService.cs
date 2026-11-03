@@ -88,9 +88,12 @@ public sealed class ProductService : IProductService
         var matrix = _barcodeService.GenerateMatrix(
             product.ProductCode, colorTuples, sizeTuples, dto.CostPrice, dto.SalePrice);
 
+        var firstLocation = await _context.WarehouseLocations.OrderBy(l => l.LocationId).FirstOrDefaultAsync(ct);
+        int defaultLocationId = firstLocation?.LocationId ?? 1;
+
         foreach (var item in matrix)
         {
-            product.Variants.Add(new ProductVariant
+            var variant = new ProductVariant
             {
                 ColorId = item.ColorId,
                 SizeId = item.SizeId,
@@ -98,7 +101,15 @@ public sealed class ProductService : IProductService
                 Barcode = item.Barcode,
                 CostPrice = item.CostPrice,
                 SalePrice = item.SalePrice
+            };
+            variant.Inventories.Add(new Inventory
+            {
+                LocationId = defaultLocationId,
+                QuantityOnHand = 0,
+                SafetyStock = 10,
+                RowVersion = DateTime.UtcNow
             });
+            product.Variants.Add(variant);
         }
 
         _context.Products.Add(product);

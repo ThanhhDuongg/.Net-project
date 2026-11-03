@@ -65,7 +65,22 @@ public sealed class InventoryService : IInventoryService
 
                 if (inventory is null)
                 {
-                    throw new InventoryNotFoundException(group.Key.VariantId, group.Key.LocationId);
+                    if (isImport)
+                    {
+                        inventory = new Inventory
+                        {
+                            VariantId = group.Key.VariantId,
+                            LocationId = group.Key.LocationId,
+                            QuantityOnHand = 0,
+                            SafetyStock = 10,
+                            RowVersion = DateTime.UtcNow
+                        };
+                        _unitOfWork.Inventories.Add(inventory);
+                    }
+                    else
+                    {
+                        throw new InventoryNotFoundException(group.Key.VariantId, group.Key.LocationId);
+                    }
                 }
 
                 if (expectedVersions.Count == 1 && inventory.RowVersion != expectedVersions[0])

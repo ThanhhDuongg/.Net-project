@@ -23,9 +23,9 @@
                 </Grid.RowDefinitions>
 
                 <!-- Logo -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="22,0,0,0">
-                    <Border Width="45" Height="45" CornerRadius="8" Background="#3B82F6">
-                        <TextBlock Text="FW" FontWeight="Bold" FontSize="20" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
+                    <Border Width="48" Height="48" CornerRadius="10" Background="White" Padding="2" BorderBrush="#3B82F6" BorderThickness="1.5">
+                        <Image Source="/Assets/logo.png" Stretch="Uniform"/>
                     </Border>
                     <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
                         <TextBlock Text="FASHION WMS" FontWeight="Bold" FontSize="16" Foreground="White"/>
@@ -34,29 +34,82 @@
                 </StackPanel>
 
                 <!-- Navigation -->
-                <StackPanel Grid.Row="1" Margin="12,16,12,0">
-                    <Button Name="btnDashboard" Click="BtnDashboard_Click" Tag="Dashboard" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="#2563EB" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
-                        <TextBlock Text="▣   Tổng quan (Dashboard)" FontWeight="SemiBold"/>
-                    </Button>
-                    <Button Name="btnProducts" Click="BtnProducts_Click" Tag="Products" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
-                        <TextBlock Text="👕  Quản lý Sản phẩm &amp; SKU"/>
-                    </Button>
-                    <Button Name="btnCategories" Click="BtnCategories_Click" Tag="Categories" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
-                        <TextBlock Text="📂  Quản lý Danh mục"/>
-                    </Button>
-                    <Button Name="btnReceipts" Click="BtnReceipts_Click" Tag="Receipts" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
-                        <TextBlock Text="▤   Nhập / Xuất Kho"/>
-                    </Button>
-                    <Button Name="btnInventory" Click="BtnInventory_Click" Tag="Inventory" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
-                        <TextBlock Text="▦   Tồn kho &amp; Vị trí kệ"/>
-                    </Button>
-                    <Button Name="btnReports" Click="BtnReports_Click" Tag="Reports" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
-                        <TextBlock Text="▥   Báo cáo &amp; Thống kê"/>
-                    </Button>
-                    <Button Name="btnEmployees" Click="BtnEmployees_Click" Tag="Employees" Height="46" Margin="0,4" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="16,0" Cursor="Hand">
-                        <TextBlock Text="♙   Nhân viên &amp; Phân quyền"/>
-                    </Button>
-                </StackPanel>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="12,12,12,12">
+                        <Button Name="btnDashboard" Click="BtnDashboard_Click" Tag="Dashboard" Height="44" Margin="0,3" HorizontalContentAlignment="Left" Background="#2563EB" Foreground="White" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <TextBlock Text="▣   Tổng quan (Dashboard)" FontWeight="SemiBold"/>
+                        </Button>
+                        <Button Name="btnProducts" Click="BtnProducts_Click" Tag="Products" Height="44" Margin="0,3" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <TextBlock Text="👕  Quản lý Sản phẩm &amp; SKU"/>
+                        </Button>
+                        <Button Name="btnCategories" Click="BtnCategories_Click" Tag="Categories" Height="44" Margin="0,3" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <TextBlock Text="📂  Quản lý Danh mục"/>
+                        </Button>
+                        <Button Name="btnSuppliers" Click="BtnSuppliers_Click" Tag="Suppliers" Height="44" Margin="0,3" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <TextBlock Text="🏭  Quản lý Nhà cung cấp"/>
+                        </Button>
+                        <Button Name="btnCustomers" Click="BtnCustomers_Click" Tag="Customers" Height="44" Margin="0,3" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <TextBlock Text="👥  Quản lý Khách hàng"/>
+                        </Button>
+
+                        <!-- Menu Giao Dịch Kho (Nhánh mẹ mở rộng / thu gọn theo mẫu Phenikaa) -->
+                        <Button Name="btnTransactionGroup" Click="BtnTransactionGroup_Click" Height="44" Margin="0,3" HorizontalContentAlignment="Stretch" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="📦  Giao dịch kho" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Name="txtTransChevron" Grid.Column="1" Text="▼" FontSize="10" Foreground="#94A3B8" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Button>
+
+                        <!-- Khung menu con phân nhánh dọc (Submenu Branch with Bullets) -->
+                        <Grid Name="pnlTransactionSubmenu" Margin="14,0,0,4">
+                            <!-- Đường kẻ dọc phân nhánh (Tree vertical line) -->
+                            <Rectangle Width="2" Fill="#334155" HorizontalAlignment="Left" Margin="10,4,0,4"/>
+
+                            <StackPanel Margin="18,0,0,0">
+                                <!-- Nhánh 1: Nhập kho -->
+                                <Button Name="btnImport" Click="BtnImport_Click" Height="36" Margin="0,2" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="6,0" Cursor="Hand">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="6" Height="6" Fill="#10B981" Margin="-15,0,9,0"/>
+                                        <TextBlock Text="📥  Nhập kho (NCC)"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Nhánh 2: Xuất kho -->
+                                <Button Name="btnExport" Click="BtnExport_Click" Height="36" Margin="0,2" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="6,0" Cursor="Hand">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="6" Height="6" Fill="#EF4444" Margin="-15,0,9,0"/>
+                                        <TextBlock Text="📤  Xuất kho (Đại lý)"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Nhánh 3: Hóa đơn & Lịch sử phiếu -->
+                                <Button Name="btnReceiptHistory" Click="BtnReceiptHistory_Click" Height="36" Margin="0,2" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="6,0" Cursor="Hand">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="6" Height="6" Fill="#3B82F6" Margin="-15,0,9,0"/>
+                                        <TextBlock Text="🧾  Hóa đơn &amp; Lịch sử"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+
+                        <Button Name="btnLocations" Click="BtnLocations_Click" Tag="Locations" Height="44" Margin="0,3" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <TextBlock Text="🏬   Quản lý Kho &amp; Vị trí kệ"/>
+                        </Button>
+                        <Button Name="btnInventory" Click="BtnInventory_Click" Tag="Inventory" Height="44" Margin="0,3" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <TextBlock Text="▦   Tồn kho &amp; Vị trí kệ"/>
+                        </Button>
+                        <Button Name="btnReports" Click="BtnReports_Click" Tag="Reports" Height="44" Margin="0,3" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <TextBlock Text="▥   Báo cáo &amp; Thống kê"/>
+                        </Button>
+                        <Button Name="btnEmployees" Click="BtnEmployees_Click" Tag="Employees" Height="44" Margin="0,3" HorizontalContentAlignment="Left" Background="Transparent" Foreground="#CBD5E1" BorderThickness="0" Padding="14,0" Cursor="Hand">
+                            <TextBlock Text="♙   Nhân viên &amp; Phân quyền"/>
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
 
                 <!-- User detail & Logout -->
                 <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="#334155" Padding="16,10">

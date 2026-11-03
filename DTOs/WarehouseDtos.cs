@@ -257,3 +257,142 @@ public class RolePermissionMatrixDto
     public bool WarehouseKeeperAllowed { get; set; }
     public string Description { get; set; } = string.Empty;
 }
+
+// --- SUPPLIER DTOs ---
+public class SupplierDto
+{
+    public int SupplierId { get; set; }
+    public string SupplierName { get; set; } = string.Empty;
+    public string? ContactName { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public bool IsActive { get; set; } = true;
+    public int TotalReceipts { get; set; }
+}
+
+public class CreateOrUpdateSupplierDto
+{
+    public string SupplierName { get; set; } = string.Empty;
+    public string? ContactName { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+}
+
+// --- RECEIPT INVOICE DTOs ---
+public class ReceiptInvoiceDto
+{
+    public int ReceiptId { get; set; }
+    public string ReceiptCode { get; set; } = string.Empty;
+    public string ReceiptType { get; set; } = string.Empty;
+    public DateTime ReceiptDate { get; set; }
+    public int? SupplierId { get; set; }
+    public string? PartnerName { get; set; }
+    public string? PartnerPhone { get; set; }
+    public string? PartnerAddress { get; set; }
+    public int UserId { get; set; }
+    public string CreatorFullName { get; set; } = string.Empty;
+    public decimal TotalAmount { get; set; }
+    public string? Notes { get; set; }
+    public int TotalQuantity { get; set; }
+    public List<ReceiptInvoiceItemDto> Items { get; set; } = new();
+}
+
+public class ReceiptInvoiceItemDto
+{
+    public int Index { get; set; }
+    public int VariantId { get; set; }
+    public string SKU { get; set; } = string.Empty;
+    public string Barcode { get; set; } = string.Empty;
+    public string ProductName { get; set; } = string.Empty;
+    public string ColorName { get; set; } = string.Empty;
+    public string SizeName { get; set; } = string.Empty;
+    public string LocationCode { get; set; } = string.Empty;
+    public int Quantity { get; set; }
+    public decimal UnitPrice { get; set; }
+    public decimal TotalLineAmount => Quantity * UnitPrice;
+}
+
+// --- CUSTOMER DTOs ---
+public class CustomerDto
+{
+    public int CustomerId { get; set; }
+    public string CustomerCode { get; set; } = string.Empty;
+    public string CustomerName { get; set; } = string.Empty;
+    public string CustomerType { get; set; } = "Đại lý cấp 1";
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public decimal DebtAmount { get; set; }
+    public bool IsActive { get; set; } = true;
+    public DateTime CreatedAt { get; set; }
+}
+
+public class CreateCustomerDto
+{
+    public string? CustomerCode { get; set; }
+    public string CustomerName { get; set; } = string.Empty;
+    public string CustomerType { get; set; } = "Đại lý cấp 1";
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+}
+
+public class UpdateCustomerDto
+{
+    public string CustomerName { get; set; } = string.Empty;
+    public string CustomerType { get; set; } = "Đại lý cấp 1";
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public decimal DebtAmount { get; set; }
+}
+
+
+// --- WAREHOUSE LOCATION DTOs ---
+public class WarehouseLocationDto
+{
+    public int LocationId { get; set; }
+    public string LocationCode { get; set; } = string.Empty;
+    public string LocationName { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public int SkuCount { get; set; }
+    public int TotalQuantity { get; set; }
+}
+
+public class CreateWarehouseLocationDto
+{
+    public string? LocationCode { get; set; }
+    public string LocationName { get; set; } = string.Empty;
+    public string? Description { get; set; }
+}
+
+public class UpdateWarehouseLocationDto
+{
+    public string LocationName { get; set; } = string.Empty;
+    public string? Description { get; set; }
+}
+
+public class LocationInventoryItemDto
+{
+    public int VariantId { get; set; }
+    public string SKU { get; set; } = string.Empty;
+    public string Barcode { get; set; } = string.Empty;
+    public string ProductName { get; set; } = string.Empty;
+    public string ColorName { get; set; } = string.Empty;
+    public string SizeName { get; set; } = string.Empty;
+    public int QuantityOnHand { get; set; }
+    public int SafetyStock { get; set; }
+    public decimal CostPrice { get; set; }
+}
+
+public class TransferStockDto
+{
+    public int VariantId { get; set; }
+    public int FromLocationId { get; set; }
+    public int ToLocationId { get; set; }
+    public int Quantity { get; set; }
+    public string? Notes { get; set; }
+    public int UserId { get; set; }
+}

@@ -20,5 +20,6 @@ public enum InventoryTransactionType
 {
     IMPORT,
     EXPORT,
-    ADJUSTMENT
+    ADJUSTMENT,
+    TRANSFER
 }

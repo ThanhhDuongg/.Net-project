@@ -42,6 +42,7 @@ public sealed class WarehouseDbContext : DbContext
     public DbSet<Inventory> Inventories => Set<Inventory>();
     public DbSet<InventoryTransaction> InventoryTransactions => Set<InventoryTransaction>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Receipt> Receipts => Set<Receipt>();
     public DbSet<ReceiptDetail> ReceiptDetails => Set<ReceiptDetail>();
 
@@ -60,6 +61,8 @@ public sealed class WarehouseDbContext : DbContext
         modelBuilder.Entity<Inventory>().ToTable("Inventories");
         modelBuilder.Entity<InventoryTransaction>().ToTable("InventoryTransactions");
         modelBuilder.Entity<Supplier>().ToTable("Suppliers");
+        modelBuilder.Entity<Customer>().ToTable("Customers");
+        modelBuilder.Entity<Customer>().HasIndex(x => x.CustomerCode).IsUnique();
         modelBuilder.Entity<Receipt>().ToTable("Receipts");
         modelBuilder.Entity<ReceiptDetail>().ToTable("ReceiptDetails");
 
