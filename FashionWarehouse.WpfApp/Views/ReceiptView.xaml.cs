@@ -285,37 +285,10 @@ public partial class ReceiptView : UserControl
 
 
     private void BtnMobileScan_Click(object sender, RoutedEventArgs e)
-
     {
-
-        string publicHttpsUrl = "https://hart-investigations-tennis-change.trycloudflare.com/scan";
-
-        string localIp = "10.51.247.73";
-
-        string scanUrl = $"http://{localIp}:5116/scan";
-
-
-
-        MessageBox.Show(
-
-            $"HƯỚNG DẪN QUÉT BẰNG CAMERA ĐIỆN THOẠI:\n\n" +
-
-            $"👉 ĐƯỜNG DẪN TRUY CẬP (Có HTTPS - Mở được Camera 100%):\n" +
-
-            $"{publicHttpsUrl}\n\n" +
-
-            $"• Bạn có thể dùng bất kỳ mạng nào trên điện thoại (4G/5G hoặc Wi-Fi).\n" +
-
-            $"• Cho phép quyền Camera và đưa camera quét mã vạch.\n" +
-
-            $"Mã vạch sẽ tự động bắn thẳng về màn hình máy tính theo thời gian thực!",
-
-            "Kết nối Camera Điện Thoại",
-
-            MessageBoxButton.OK,
-
-            MessageBoxImage.Information);
-
+        var qrWindow = new MobileScanQrWindow();
+        qrWindow.Owner = Window.GetWindow(this);
+        qrWindow.ShowDialog();
     }
 
 

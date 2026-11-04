@@ -1,0 +1,107 @@
+<Window x:Class="FashionWarehouse.WpfApp.Views.MobileScanQrWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quét Mã Vạch Bằng Điện Thoại (Mobile Barcode Scanner)"
+        Height="590" Width="470"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        FontFamily="Segoe UI"
+        Background="#F8FAFC">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 1. Header -->
+        <Border Grid.Row="0" Background="#1E293B" CornerRadius="10" Padding="16,12" Margin="0,0,0,14">
+            <DockPanel VerticalAlignment="Center">
+                <TextBlock Text="📱" FontSize="26" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="QUÉT MÃ VẠCH BẰNG ĐIỆN THOẠI" FontWeight="Bold" FontSize="14.5" Foreground="White"/>
+                    <TextBlock Text="Dùng camera điện thoại quét mã QR bên dưới để mở giao diện" FontSize="11" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- 2. Chọn Chế độ kết nối -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="10,8" Margin="0,0,0,12" BorderBrush="#E2E8F0" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <RadioButton x:Name="rbHttps" Grid.Column="0" Content="🌐 Chế độ Đám Mây (HTTPS)"
+                             IsChecked="True" FontWeight="SemiBold" FontSize="11.5" Cursor="Hand"
+                             Checked="ConnectionMode_Changed"/>
+
+                <RadioButton x:Name="rbLocal" Grid.Column="1" Content="📶 Mạng Wi-Fi Nội Bộ"
+                             FontWeight="SemiBold" FontSize="11.5" Cursor="Hand"
+                             Checked="ConnectionMode_Changed"/>
+            </Grid>
+        </Border>
+
+        <!-- 3. Khu vực Mã QR Code trung tâm -->
+        <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <!-- Khung hiển thị QR Code -->
+                <Border Width="210" Height="210" Background="White" CornerRadius="8" Padding="6"
+                        BorderBrush="#CBD5E1" BorderThickness="1" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <Image x:Name="imgQrCode" Width="196" Height="196" Stretch="Uniform"/>
+                </Border>
+
+                <!-- URL -->
+                <TextBlock x:Name="lblModeHint" Text="Hỗ trợ mọi mạng (4G/5G/Wi-Fi) • Mở camera 100% bảo mật"
+                           FontSize="11" Foreground="#059669" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+
+                <Border Background="#F8FAFC" CornerRadius="6" Padding="8,4" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,10" MaxWidth="390">
+                    <TextBlock x:Name="txtUrlDisplay" Text="https://..." FontSize="11" Foreground="#1E293B"
+                               FontFamily="Consolas" TextAlignment="Center" TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- Nút thao tác nhanh -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Click="BtnCopyUrl_Click" Height="30" Padding="12,0" Background="#F1F5F9" Foreground="#334155"
+                            BorderThickness="0" Cursor="Hand" Margin="0,0,8,0">
+                        <Button.Resources>
+                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="4"/></Style>
+                        </Button.Resources>
+                        <TextBlock Text="📋 Sao Chép Link" FontSize="11" FontWeight="SemiBold"/>
+                    </Button>
+
+                    <Button Click="BtnOpenBrowser_Click" Height="30" Padding="12,0" Background="#DBEAFE" Foreground="#1D4ED8"
+                            BorderThickness="0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="4"/></Style>
+                        </Button.Resources>
+                        <TextBlock Text="🌐 Mở Trên Trình Duyệt" FontSize="11" FontWeight="SemiBold"/>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- 4. Footer & Trạng thái SignalR -->
+        <Grid Grid.Row="3" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Ellipse Width="8" Height="8" Fill="#10B981" Margin="0,0,6,0"/>
+                <TextBlock x:Name="lblSignalRStatus" Text="Tín hiệu máy chủ: Sẵn sàng nhận mã quét" FontSize="11" Foreground="#64748B"/>
+            </StackPanel>
+
+            <Button Grid.Column="1" Click="BtnClose_Click" Content="Đóng" Height="32" Width="80"
+                    Background="#475569" Foreground="White" BorderThickness="0" Cursor="Hand">
+                <Button.Resources>
+                    <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>
+

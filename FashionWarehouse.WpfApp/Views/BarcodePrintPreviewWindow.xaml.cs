@@ -25,7 +25,7 @@ public partial class BarcodePrintPreviewWindow : Window
 
         foreach (var v in variants)
         {
-            var barcodeImage = BarcodeVisualGenerator.CreateBarcodeImage(v.Barcode, 230, 40);
+            var barcodeImage = BarcodeVisualGenerator.CreateBarcodeBitmap(v.Barcode, moduleWidth: 2, height: 48, quietModules: 14);
 
             labelList.Add(new BarcodeLabelModel
             {
@@ -73,4 +73,3 @@ public partial class BarcodePrintPreviewWindow : Window
         public string PriceText { get; set; } = string.Empty;
     }
 }
-

@@ -137,8 +137,9 @@
                                                HorizontalAlignment="Center" Margin="0,0,0,4"/>
                                     <TextBlock Name="txtBarcodeSku" Text="" FontWeight="Bold" FontSize="12"
                                                Foreground="#1E293B" HorizontalAlignment="Center" Margin="0,0,0,6"/>
-                                    <Image Name="imgBarcode" Width="220" Height="80" Stretch="Uniform"/>
-                                    <TextBlock Name="txtBarcodeValue" Text="" FontSize="10" Foreground="#64748B"
+                                    <Image Name="imgBarcode" Width="220" Height="80" Stretch="Uniform"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor" SnapsToDevicePixels="True"/>
+                                    <TextBlock Name="txtBarcodeValue" Text="" FontSize="11" Foreground="#64748B"
                                                HorizontalAlignment="Center" Margin="0,4,0,0" FontFamily="Consolas"/>
                                 </StackPanel>
                             </Border>
@@ -260,7 +261,8 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Image Source="{Binding BarcodeImage}" Height="34" Stretch="Uniform"
-                                               HorizontalAlignment="Left" Margin="2,2"/>
+                                               HorizontalAlignment="Left" Margin="2,2"
+                                               RenderOptions.BitmapScalingMode="NearestNeighbor" SnapsToDevicePixels="True"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

@@ -7,6 +7,7 @@ using NetProject.Services;
 using NetProject.Services.Reporting;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("http://0.0.0.0:5116");
 
 // Lấy ConnectionString DefaultConnection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -54,6 +55,34 @@ app.MapGet("/scan", (IWebHostEnvironment env) =>
 {
     var htmlPath = Path.Combine(env.ContentRootPath, "wwwroot", "scan.html");
     return Results.File(htmlPath, "text/html");
+});
+
+app.MapGet("/api/system/scanner-info", () =>
+{
+    string localIp = "10.51.247.73";
+    try
+    {
+        using var socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, 0);
+        socket.Connect("8.8.8.8", 65530);
+        if (socket.LocalEndPoint is System.Net.IPEndPoint ep)
+            localIp = ep.Address.ToString();
+    }
+    catch { }
+
+    string? cloudflareUrl = null;
+    try
+    {
+        if (File.Exists("tunnel_url.txt"))
+            cloudflareUrl = File.ReadAllText("tunnel_url.txt").Trim();
+    }
+    catch { }
+
+    return Results.Ok(new
+    {
+        localIp,
+        localScanUrl = $"http://{localIp}:5116/scan",
+        cloudflareScanUrl = string.IsNullOrWhiteSpace(cloudflareUrl) ? $"http://{localIp}:5116/scan" : cloudflareUrl
+    });
 });
 
 app.MapGet("/", () => new

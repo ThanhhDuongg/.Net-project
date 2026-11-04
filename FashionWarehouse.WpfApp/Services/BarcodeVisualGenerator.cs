@@ -1,15 +1,22 @@
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace FashionWarehouse.WpfApp.Services;
 
 /// <summary>
-/// Bộ tạo đồ họa mã vạch Code 128 chuẩn cho tem nhãn hàng hóa
+/// Bộ tạo đồ họa mã vạch chuẩn Code 128 (ISO/IEC 15417)
+/// Hỗ trợ Code 128 Auto (Code 128C cho chuỗi số, Code 128B cho ký tự ASCII)
+/// Đảm bảo chuẩn Modulo 103 checksum và Quiet Zone theo tiêu chuẩn quốc tế.
 /// </summary>
 public static class BarcodeVisualGenerator
 {
+    // Bảng 107 mẫu chuẩn Code 128 (0 - 106).
+    // Mỗi ký tự 0-105 gồm 6 phần tử (vạch-khoảng trắng xen kẽ), tổng độ rộng 11 modules.
+    // Ký tự STOP (106) gồm 7 phần tử (vạch-trắng xen kẽ), tổng độ rộng 13 modules.
     private static readonly string[] Code128Patterns = new[]
     {
         "212222", "222122", "222221", "121223", "121322", "131222", "122213", "122312", "132212", "221213", // 0-9
@@ -25,7 +32,124 @@ public static class BarcodeVisualGenerator
         "114131", "311141", "411131", "211412", "211214", "211232", "2331112"                                 // 100-106 (Stop)
     };
 
-    public static DrawingImage CreateBarcodeImage(string code, double width = 190, double height = 45)
+    /// <summary>
+    /// Mã hóa chuỗi đầu vào thành chuỗi độ rộng vạch chuẩn Code 128 (Start -> Dữ liệu -> Modulo 103 -> Stop)
+    /// </summary>
+    public static string EncodeCode128(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) text = "000000";
+
+        var sb = new StringBuilder();
+        bool isAllDigits = text.All(char.IsDigit);
+        bool useCodeC = isAllDigits && (text.Length % 2 == 0);
+
+        if (useCodeC)
+        {
+            // Code Set C: nén 2 chữ số thành 1 ký tự mã vạch -> vạch to rõ, máy quét đọc cực nhanh
+            int startCode = 105; // Start C
+            sb.Append(Code128Patterns[startCode]);
+            int checksum = startCode;
+            int weight = 1;
+
+            for (int i = 0; i < text.Length; i += 2)
+            {
+                int val = (text[i] - '0') * 10 + (text[i + 1] - '0');
+                sb.Append(Code128Patterns[val]);
+                checksum += val * weight;
+                weight++;
+            }
+
+            int checkDigit = checksum % 103;
+            sb.Append(Code128Patterns[checkDigit]);
+            sb.Append(Code128Patterns[106]); // Stop pattern
+        }
+        else
+        {
+            // Code Set B: ký tự ASCII tiêu chuẩn (32 đến 126)
+            int startCode = 104; // Start B
+            sb.Append(Code128Patterns[startCode]);
+            int checksum = startCode;
+            int weight = 1;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                int ascii = text[i];
+                int val = ascii - 32;
+                if (val < 0 || val > 105) val = 0;
+
+                sb.Append(Code128Patterns[val]);
+                checksum += val * weight;
+                weight++;
+            }
+
+            int checkDigit = checksum % 103;
+            sb.Append(Code128Patterns[checkDigit]);
+            sb.Append(Code128Patterns[106]); // Stop pattern
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Tạo BitmapSource sắc nét tuyệt đối (Pixel-Perfect) không bị mờ nhòe do khử răng cưa.
+    /// Tối ưu hoàn hảo cho camera điện thoại quét trực tiếp trên màn hình máy tính.
+    /// </summary>
+    public static BitmapSource CreateBarcodeBitmap(string code, int moduleWidth = 2, int height = 48, int quietModules = 14)
+    {
+        string pattern = EncodeCode128(code);
+        if (string.IsNullOrEmpty(pattern))
+        {
+            var fallback = new WriteableBitmap(100, height, 96, 96, PixelFormats.Bgra32, null);
+            fallback.Freeze();
+            return fallback;
+        }
+
+        // Tính tổng số module
+        int dataModules = 0;
+        foreach (char c in pattern) dataModules += (c - '0');
+
+        int totalModules = dataModules + (quietModules * 2);
+        int pixelWidth = totalModules * moduleWidth;
+        int pixelHeight = Math.Max(24, height);
+
+        int[] pixels = new int[pixelWidth * pixelHeight];
+        // Điền toàn bộ nền trắng (0xFFFFFFFF)
+        Array.Fill(pixels, unchecked((int)0xFFFFFFFF));
+
+        int currentX = quietModules * moduleWidth;
+        bool isBar = true;
+
+        foreach (char c in pattern)
+        {
+            int barUnits = c - '0';
+            int barWidthPx = barUnits * moduleWidth;
+
+            if (isBar)
+            {
+                for (int y = 0; y < pixelHeight; y++)
+                {
+                    int rowOffset = y * pixelWidth;
+                    for (int x = 0; x < barWidthPx; x++)
+                    {
+                        pixels[rowOffset + currentX + x] = unchecked((int)0xFF000000); // Đen thuần 100%
+                    }
+                }
+            }
+
+            currentX += barWidthPx;
+            isBar = !isBar;
+        }
+
+        var bitmap = new WriteableBitmap(pixelWidth, pixelHeight, 96, 96, PixelFormats.Bgra32, null);
+        bitmap.WritePixels(new Int32Rect(0, 0, pixelWidth, pixelHeight), pixels, pixelWidth * 4, 0);
+        bitmap.Freeze();
+        return bitmap;
+    }
+
+    /// <summary>
+    /// Tạo DrawingImage dạng vector cho in ấn tem nhãn hóa đơn
+    /// </summary>
+    public static DrawingImage CreateBarcodeImage(string code, double width = 230, double height = 45)
     {
         var group = new DrawingGroup();
         using var dc = group.Open();
@@ -33,19 +157,21 @@ public static class BarcodeVisualGenerator
         // Nền trắng
         dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, width, height));
 
-        string pattern = EncodeCode128B(code);
+        string pattern = EncodeCode128(code);
         if (string.IsNullOrEmpty(pattern))
         {
             return new DrawingImage(group);
         }
 
-        // Tính độ rộng của mỗi vạch
         int totalUnits = 0;
         foreach (char c in pattern) totalUnits += (c - '0');
 
-        double unitWidth = width / (totalUnits + 10);
-        double startX = (width - (totalUnits * unitWidth)) / 2;
-        double currentX = startX;
+        // Ít nhất 12 modules Quiet Zone mỗi bên
+        int quietZoneUnits = 14;
+        int fullUnits = totalUnits + (quietZoneUnits * 2);
+
+        double unitWidth = width / fullUnits;
+        double currentX = quietZoneUnits * unitWidth;
 
         bool isBar = true;
         foreach (char c in pattern)
@@ -64,31 +190,4 @@ public static class BarcodeVisualGenerator
 
         return new DrawingImage(group);
     }
-
-    private static string EncodeCode128B(string text)
-    {
-        if (string.IsNullOrEmpty(text)) text = "000000";
-
-        var sb = new StringBuilder();
-        int startCode = 104; // Start B
-        sb.Append(Code128Patterns[startCode]);
-
-        int checksum = startCode;
-        for (int i = 0; i < text.Length; i++)
-        {
-            int ascii = text[i];
-            int codeValue = ascii - 32;
-            if (codeValue < 0 || codeValue > 105) codeValue = 0;
-
-            sb.Append(Code128Patterns[codeValue]);
-            checksum += codeValue * (i + 1);
-        }
-
-        int checkDigit = checksum % 103;
-        sb.Append(Code128Patterns[checkDigit]);
-        sb.Append(Code128Patterns[106]); // Stop pattern
-
-        return sb.ToString();
-    }
 }
-
