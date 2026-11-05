@@ -163,7 +163,22 @@
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Mã SKU" Binding="{Binding SKU}" FontWeight="Bold" Width="140"/>
-                        <DataGridTextColumn Header="Mã vạch (Barcode)" Binding="{Binding Barcode}" Width="130"/>
+                        <DataGridTemplateColumn Header="Mã vạch (Barcode)" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="BtnViewBarcode_Click" Tag="{Binding}"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand" Padding="2,0"
+                                            ToolTip="Bấm để xem Barcode lớn và thao tác Nhập/Xuất kho">
+                                        <Border Background="#F1F5F9" CornerRadius="4" Padding="6,3" BorderBrush="#CBD5E1" BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="🔍 " FontSize="11"/>
+                                                <TextBlock Text="{Binding Barcode}" FontFamily="Consolas" FontWeight="Bold" Foreground="#2563EB"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Tên sản phẩm" Binding="{Binding ProductName}" Width="2*"/>
                         <DataGridTextColumn Header="Màu sắc" Binding="{Binding ColorName}" Width="100"/>
                         <DataGridTextColumn Header="Size" Binding="{Binding SizeName}" Width="70"/>

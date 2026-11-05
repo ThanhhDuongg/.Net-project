@@ -201,6 +201,16 @@ public partial class InventoryView : UserControl
         }
     }
 
+    private void BtnViewBarcode_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is InventoryStatusRow row)
+        {
+            var win = new BarcodeItemDetailWindow(row);
+            win.Owner = Window.GetWindow(this);
+            win.ShowDialog();
+        }
+    }
+
     private void BtnRefresh_Click(object sender, RoutedEventArgs e) => LoadInventoryAsync();
 
     private async void BtnExportExcel_Click(object sender, RoutedEventArgs e)

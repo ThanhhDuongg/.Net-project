@@ -216,7 +216,7 @@ public partial class MainWindow : Window
 
 
 
-    private void ShowImport()
+    public void ShowImport()
 
     {
 
@@ -234,7 +234,7 @@ public partial class MainWindow : Window
 
 
 
-    private void ShowExport()
+    public void ShowExport()
 
     {
 

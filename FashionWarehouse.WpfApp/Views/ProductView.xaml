@@ -38,6 +38,13 @@
                         </Button.Resources>
                         <TextBlock Text="💾 Lưu Vào CSDL" FontWeight="SemiBold"/>
                     </Button>
+                    <Button Name="btnPrintLabels" Click="BtnPrintLabels_Click" Height="38" Margin="10,0,0,0"
+                            Background="#8B5CF6" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
+                        </Button.Resources>
+                        <TextBlock Text="🖨️ In Tem Barcode" FontWeight="SemiBold"/>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>

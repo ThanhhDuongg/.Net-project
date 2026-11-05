@@ -70,6 +70,22 @@ public partial class ProductView : UserControl
         cboCategory.SelectedIndex = 0;
     }
 
+    private void BtnPrintLabels_Click(object sender, RoutedEventArgs e)
+    {
+        if (_variants.Count == 0)
+        {
+            ShowMessage("Vui lòng bấm 'Tạo Ma Trận Biến Thể' trước khi xem/in tem barcode.", false);
+            return;
+        }
+
+        string productName = string.IsNullOrWhiteSpace(txtProductName.Text)
+            ? txtProductCode.Text.Trim() : txtProductName.Text.Trim();
+
+        var printWin = new BarcodePrintPreviewWindow(productName, _variants);
+        printWin.Owner = Window.GetWindow(this);
+        printWin.ShowDialog();
+    }
+
     private void BtnGenerate_Click(object sender, RoutedEventArgs e) => GenerateVariants();
 
     private void GenerateVariants()
