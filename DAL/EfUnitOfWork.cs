@@ -166,25 +166,26 @@ public sealed class EfReportRepository : IReportRepository
     }
 
     public IQueryable<InventoryStatusDto> GetInventoryStatuses() =>
-        from inventory in _context.Inventories.AsNoTracking()
-        join variant in _context.ProductVariants.AsNoTracking() on inventory.VariantId equals variant.VariantId
+        from variant in _context.ProductVariants.AsNoTracking()
+        where variant.IsActive
         join product in _context.Products.AsNoTracking() on variant.ProductId equals product.ProductId
         join color in _context.Colors.AsNoTracking() on variant.ColorId equals color.ColorId
         join size in _context.Sizes.AsNoTracking() on variant.SizeId equals size.SizeId
-        join location in _context.WarehouseLocations.AsNoTracking() on inventory.LocationId equals location.LocationId
+        join inventory in _context.Inventories.AsNoTracking() on variant.VariantId equals inventory.VariantId into invGroup
+        from inv in invGroup.DefaultIfEmpty()
         select new InventoryStatusDto
         {
             VariantId = variant.VariantId,
-            LocationId = location.LocationId,
-            RowVersion = inventory.RowVersion,
+            LocationId = inv != null ? inv.LocationId : 1,
+            RowVersion = inv != null ? inv.RowVersion : DateTime.UtcNow,
             SKU = variant.SKU,
             Barcode = variant.Barcode,
             ProductName = product.ProductName,
             ColorName = color.ColorName,
             SizeName = size.SizeName,
-            LocationCode = location.LocationCode,
-            QuantityOnHand = inventory.QuantityOnHand,
-            SafetyStock = inventory.SafetyStock,
+            LocationCode = inv != null && inv.Location != null ? inv.Location.LocationCode : "KHO-A-01",
+            QuantityOnHand = inv != null ? inv.QuantityOnHand : 0,
+            SafetyStock = inv != null ? inv.SafetyStock : 10,
             CostPrice = variant.CostPrice
         };
 
@@ -289,6 +290,3 @@ public sealed class EfReportRepository : IReportRepository
             });
     }
 }
-
-
-

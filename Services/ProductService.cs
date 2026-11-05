@@ -61,10 +61,6 @@ public sealed class ProductService : IProductService
         if (dto.SizeIds.Count == 0)
             throw new ArgumentException("Phải chọn ít nhất một kích cỡ.");
 
-        var exists = await _context.Products.AnyAsync(p => p.ProductCode == dto.ProductCode.Trim(), ct);
-        if (exists)
-            throw new InvalidOperationException($"Mã sản phẩm '{dto.ProductCode}' đã tồn tại.");
-
         var colors = await _context.Colors
             .Where(c => dto.ColorIds.Contains(c.ColorId))
             .ToListAsync(ct);
@@ -72,6 +68,72 @@ public sealed class ProductService : IProductService
         var sizes = await _context.Sizes
             .Where(s => dto.SizeIds.Contains(s.SizeId))
             .ToListAsync(ct);
+
+        var firstLocation = await _context.WarehouseLocations.OrderBy(l => l.LocationId).FirstOrDefaultAsync(ct);
+        int defaultLocationId = firstLocation?.LocationId ?? 1;
+
+        var colorTuples = colors.Select(c => (c.ColorId, c.ColorName)).ToList();
+        var sizeTuples = sizes.Select(s => (s.SizeId, s.SizeName)).ToList();
+
+        var existingProduct = await _context.Products
+            .Include(p => p.Variants).ThenInclude(v => v.Inventories)
+            .FirstOrDefaultAsync(p => p.ProductCode == dto.ProductCode.Trim(), ct);
+
+        if (existingProduct != null)
+        {
+            // Bổ sung các biến thể ma trận mới cho sản phẩm đã tồn tại
+            existingProduct.ProductName = dto.ProductName.Trim();
+            existingProduct.CategoryId = dto.CategoryId;
+            existingProduct.BasePrice = dto.BasePrice;
+            if (!string.IsNullOrWhiteSpace(dto.Description))
+                existingProduct.Description = dto.Description.Trim();
+
+            var matrix = _barcodeService.GenerateMatrix(
+                existingProduct.ProductCode, colorTuples, sizeTuples, dto.CostPrice, dto.SalePrice);
+
+            foreach (var item in matrix)
+            {
+                var existingVar = existingProduct.Variants.FirstOrDefault(v => v.SKU == item.SKU);
+                if (existingVar != null)
+                {
+                    existingVar.Barcode = item.Barcode;
+                    existingVar.CostPrice = item.CostPrice;
+                    existingVar.SalePrice = item.SalePrice;
+                    existingVar.IsActive = true;
+                }
+                else
+                {
+                    var newVar = new ProductVariant
+                    {
+                        ColorId = item.ColorId,
+                        SizeId = item.SizeId,
+                        SKU = item.SKU,
+                        Barcode = item.Barcode,
+                        CostPrice = item.CostPrice,
+                        SalePrice = item.SalePrice,
+                        IsActive = true
+                    };
+                    newVar.Inventories.Add(new Inventory
+                    {
+                        LocationId = defaultLocationId,
+                        QuantityOnHand = 0,
+                        SafetyStock = 10,
+                        RowVersion = DateTime.UtcNow
+                    });
+                    existingProduct.Variants.Add(newVar);
+                }
+            }
+
+            await _context.SaveChangesAsync(ct);
+
+            return new ProductDetailDto
+            {
+                ProductId = existingProduct.ProductId,
+                ProductCode = existingProduct.ProductCode,
+                ProductName = existingProduct.ProductName,
+                Variants = matrix
+            };
+        }
 
         var product = new Product
         {
@@ -83,15 +145,10 @@ public sealed class ProductService : IProductService
             Description = dto.Description?.Trim()
         };
 
-        var colorTuples = colors.Select(c => (c.ColorId, c.ColorName)).ToList();
-        var sizeTuples = sizes.Select(s => (s.SizeId, s.SizeName)).ToList();
-        var matrix = _barcodeService.GenerateMatrix(
+        var newMatrix = _barcodeService.GenerateMatrix(
             product.ProductCode, colorTuples, sizeTuples, dto.CostPrice, dto.SalePrice);
 
-        var firstLocation = await _context.WarehouseLocations.OrderBy(l => l.LocationId).FirstOrDefaultAsync(ct);
-        int defaultLocationId = firstLocation?.LocationId ?? 1;
-
-        foreach (var item in matrix)
+        foreach (var item in newMatrix)
         {
             var variant = new ProductVariant
             {
@@ -100,7 +157,8 @@ public sealed class ProductService : IProductService
                 SKU = item.SKU,
                 Barcode = item.Barcode,
                 CostPrice = item.CostPrice,
-                SalePrice = item.SalePrice
+                SalePrice = item.SalePrice,
+                IsActive = true
             };
             variant.Inventories.Add(new Inventory
             {
@@ -120,7 +178,7 @@ public sealed class ProductService : IProductService
             ProductId = product.ProductId,
             ProductCode = product.ProductCode,
             ProductName = product.ProductName,
-            Variants = matrix
+            Variants = newMatrix
         };
     }
 

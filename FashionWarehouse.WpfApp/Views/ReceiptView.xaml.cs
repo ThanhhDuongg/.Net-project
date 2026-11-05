@@ -81,6 +81,7 @@ public partial class ReceiptView : UserControl
         {
 
             _ = LoadSuppliersAndCustomersAsync();
+            _ = LoadLiveCatalogAsync();
 
             txtBarcode.Focus();
 
@@ -292,6 +293,40 @@ public partial class ReceiptView : UserControl
     }
 
 
+
+    private async Task LoadLiveCatalogAsync()
+    {
+        try
+        {
+            var items = await HttpClient.GetFromJsonAsync<List<InventoryApiStatusDto>>("api/inventory/statuses?take=5000");
+            if (items != null && items.Count > 0)
+            {
+                ProductCatalog.Clear();
+                foreach (var i in items)
+                {
+                    ProductCatalog.Add(new CatalogItem(
+                        i.VariantId,
+                        i.LocationId,
+                        i.Barcode,
+                        i.SKU,
+                        i.ProductName,
+                        i.ColorName,
+                        i.SizeName,
+                        i.LocationCode,
+                        i.QuantityOnHand,
+                        i.CostPrice > 0 ? (long)i.CostPrice : 120000,
+                        (long)(i.CostPrice > 0 ? i.CostPrice * 1.5m : 250000)));
+                }
+
+                cboProductPicker.ItemsSource = ProductCatalog.Select(p => $"{p.SKU} — {p.Name} ({p.Color}/{p.Size})").ToList();
+                if (cboProductPicker.Items.Count > 0)
+                {
+                    cboProductPicker.SelectedIndex = 0;
+                }
+            }
+        }
+        catch { }
+    }
 
     private void InitProductPicker()
 
@@ -640,12 +675,13 @@ public partial class ReceiptView : UserControl
                         apiItem.LocationCode,
 
                         apiItem.QuantityOnHand,
+                        (long)(apiItem.CostPrice > 0 ? apiItem.CostPrice : 120000),
+                        (long)(apiItem.CostPrice > 0 ? apiItem.CostPrice * 1.5m : 250000));
 
-                        120000,
-
-                        250000);
-
-
+                    if (!ProductCatalog.Any(x => x.VariantId == catItem.VariantId))
+                    {
+                        ProductCatalog.Add(catItem);
+                    }
 
                     await AddItemByCatalogWithLiveVersionAsync(catItem);
 
@@ -666,13 +702,12 @@ public partial class ReceiptView : UserControl
 
 
         MessageBox.Show(
-
-            $"Không tìm thấy mã '{code}' trong kho!\nBạn có thể chọn từ danh sách dropdown 'Cách 1' ở trên.",
-
-            "Mã không tồn tại",
-
+            $"Không tìm thấy mã '{code}' trong CSDL kho!\n\n" +
+            "💡 Hướng dẫn xử lý:\n" +
+            "- Nếu đây là sản phẩm mới vừa tạo ở màn hình 'Quản lý Sản phẩm & SKU', bạn hãy quay lại đó và bấm nút '💾 Lưu Sản Phẩm Vào CSDL' trước khi Nhập kho.\n" +
+            "- Hoặc bạn có thể chọn mặt hàng có sẵn từ danh sách dropdown 'Cách 1' ở trên.",
+            "Mã chưa được lưu trong CSDL",
             MessageBoxButton.OK,
-
             MessageBoxImage.Warning);
 
     }
@@ -1072,6 +1107,8 @@ public partial class ReceiptView : UserControl
         public string LocationCode { get; set; } = string.Empty;
 
         public int QuantityOnHand { get; set; }
+
+        public decimal CostPrice { get; set; }
 
         public DateTime RowVersion { get; set; }
 

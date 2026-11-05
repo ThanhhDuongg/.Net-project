@@ -61,7 +61,7 @@ public class BarcodeGeneratorService
     {
         using var md5 = MD5.Create();
         byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(sku));
-        long number = Math.Abs(BitConverter.ToInt64(hash, 0)) % 100000000000L;
+        long number = Math.Abs(BitConverter.ToInt64(hash, 0)) % 1_000_000_000L;
         return $"893{number:D9}";
     }
 

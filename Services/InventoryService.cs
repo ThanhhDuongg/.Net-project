@@ -172,9 +172,9 @@ public sealed class InventoryService : IInventoryService
             return null;
         }
 
-        // Thực tế DAL EF sẽ translate truy vấn này thành SQL; service không biết DbContext.
+        var trimmed = barcode.Trim();
         return await Task.FromResult(_unitOfWork.Reports.GetInventoryStatuses()
-            .FirstOrDefault(x => x.Barcode == barcode.Trim()));
+            .FirstOrDefault(x => x.Barcode == trimmed || x.SKU == trimmed));
     }
 
     private static Receipt CreateReceipt(InventoryTransactionRequestDto request)
@@ -227,4 +227,3 @@ public sealed class InventoryService : IInventoryService
 
     private sealed record PendingInventoryChange(Inventory Inventory, int Quantity, int Before, int After);
 }
-
