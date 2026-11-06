@@ -1,4 +1,4 @@
-<UserControl x:Class="FashionWarehouse.WpfApp.Views.WarehouseLocationView"
+﻿<UserControl x:Class="FashionWarehouse.WpfApp.Views.WarehouseLocationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Background="#F8FAFC">
@@ -121,11 +121,11 @@
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="400"/>
+                <ColumnDefinition x:Name="colSidePanel" Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <!-- Table danh sách kho -->
-            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16" Margin="0,0,14,0">
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -143,22 +143,39 @@
 
                     <DataGrid Grid.Row="1" x:Name="dgLocations" AutoGenerateColumns="False" CanUserAddRows="False"
                               GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
-                              HeadersVisibility="Column" RowHeight="44" BorderThickness="0" Background="Transparent"
-                              SelectionMode="Single" SelectionChanged="DgLocations_SelectionChanged">
+                              HeadersVisibility="Column" RowHeight="46" BorderThickness="0" Background="Transparent"
+                              SelectionMode="Single" SelectionChanged="DgLocations_SelectionChanged"
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã Vị Trí" Width="100" Binding="{Binding LocationCode}" FontWeight="Bold"/>
-                            <DataGridTextColumn Header="Tên Kho / Kệ Lưu Trữ" Width="160" Binding="{Binding LocationName}"/>
-                            <DataGridTextColumn Header="Mô Tả / Khu Vực Chuyên Dụng" Width="*" Binding="{Binding Description}"/>
-                            <DataGridTextColumn Header="Mặt Hàng (SKU)" Width="110" Binding="{Binding SkuCount}" FontWeight="Bold"/>
-                            <DataGridTextColumn Header="Tổng Tồn (Chiếc)" Width="120" Binding="{Binding TotalQuantity, StringFormat={}{0:N0}}" FontWeight="Bold"/>
+                            <DataGridTextColumn Header="Mã Vị Trí" Width="105" Binding="{Binding LocationCode}" FontWeight="Bold"/>
+                            <DataGridTextColumn Header="Tên Kho / Kệ" Width="145" Binding="{Binding LocationName}"/>
+                            <DataGridTextColumn Header="Mô Tả Lưu Trữ" Width="*" MinWidth="150" Binding="{Binding Description}"/>
 
-                            <DataGridTemplateColumn Header="Thao tác" Width="170">
+                            <DataGridTemplateColumn Header="Số SKU" Width="95">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding SkuCount}" FontWeight="Bold" FontSize="13" Foreground="#0F172A"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Tổng Tồn" Width="105">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding TotalQuantity, StringFormat={}{0:N0}}" FontWeight="Bold" FontSize="13" Foreground="#2563EB"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Thao tác" Width="165">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <Button Content="📦 Xem Hàng" Click="BtnViewInventory_Click" Tag="{Binding}"
                                                     Background="#DBEAFE" Foreground="#1E40AF" BorderThickness="0"
-                                                    Padding="8,3" FontSize="11" FontWeight="SemiBold" Margin="0,0,6,0" Cursor="Hand">
+                                                    Padding="8,4" FontSize="11" FontWeight="SemiBold" Margin="0,0,6,0" Cursor="Hand">
                                                 <Button.Resources>
                                                     <Style TargetType="Border">
                                                         <Setter Property="CornerRadius" Value="4"/>
@@ -168,11 +185,23 @@
 
                                             <Button Content="✏️" Click="BtnEdit_Click" Tag="{Binding}"
                                                     Background="#F1F5F9" Foreground="#334155" BorderThickness="0"
-                                                    Padding="6,3" FontSize="11" Margin="0,0,6,0" Cursor="Hand" ToolTip="Sửa thông tin"/>
+                                                    Padding="6,4" FontSize="11" Margin="0,0,6,0" Cursor="Hand" ToolTip="Sửa thông tin">
+                                                <Button.Resources>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="CornerRadius" Value="4"/>
+                                                    </Style>
+                                                </Button.Resources>
+                                            </Button>
 
                                             <Button Content="🗑️" Click="BtnDelete_Click" Tag="{Binding}"
                                                     Background="#FEE2E2" Foreground="#DC2626" BorderThickness="0"
-                                                    Padding="6,3" FontSize="11" Cursor="Hand" ToolTip="Xóa kho (khi tồn = 0)"/>
+                                                    Padding="6,4" FontSize="11" Cursor="Hand" ToolTip="Xóa kho (khi tồn = 0)">
+                                                <Button.Resources>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="CornerRadius" Value="4"/>
+                                                    </Style>
+                                                </Button.Resources>
+                                            </Button>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -183,7 +212,7 @@
             </Border>
 
             <!-- Side Panel: Form Thêm/Sửa Kho HOẶC Bảng hàng hóa trên kệ -->
-            <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="18">
+            <Border x:Name="brdSidePanel" Grid.Column="1" Width="400" Margin="14,0,0,0" Background="White" CornerRadius="8" Padding="18" Visibility="Collapsed">
                 <Grid>
                 <!-- Chế độ 1: Form Thêm / Chỉnh sửa -->
                 <Grid x:Name="pnlEditForm" Visibility="Visible">
@@ -195,8 +224,8 @@
 
                     <DockPanel Grid.Row="0" Margin="0,0,0,16">
                         <TextBlock x:Name="lblFormTitle" Text="THÊM VỊ TRÍ KHO MỚI" FontWeight="Bold" FontSize="15" Foreground="#1E293B"/>
-                        <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Content="✕" Click="BtnCancelEdit_Click"
-                                Background="Transparent" BorderThickness="0" Foreground="#94A3B8" FontSize="14" Cursor="Hand"/>
+                        <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Width="28" Height="28" Content="✕" Click="BtnCancelEdit_Click" ToolTip="Đóng phần thêm / sửa vị trí kho" Background="#F1F5F9" BorderThickness="0" Foreground="#64748B" FontSize="13" FontWeight="Bold" Cursor="Hand"><Button.Resources><Style TargetType="Border"><Setter Property="CornerRadius" Value="14"/></Style></Button.Resources></Button>
+
                     </DockPanel>
 
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">

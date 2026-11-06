@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 
 using System.Windows.Controls;
 
@@ -55,19 +55,12 @@ public partial class MainWindow : Window
 
 
     private void LoadUserInfo()
-
     {
-
         if (UserSession.IsLoggedIn)
-
         {
-
             txtUserFullName.Text = UserSession.FullName;
-
             txtUserRole.Text = $"{UserSession.RoleName} ({UserSession.Username})";
-
         }
-
     }
 
 
@@ -314,17 +307,11 @@ public partial class MainWindow : Window
 
 
     private void ShowEmployees()
-
     {
-
         MainContent.Content = _employeeView;
-
         txtPageTitle.Text = "QUẢN LÝ NHÂN VIÊN & PHÂN QUYỀN";
-
         txtPageSubTitle.Text = "Danh sách tài khoản, phân bổ vai trò quản trị viên / thủ kho và thiết lập bảo mật";
-
         SetActiveButton(btnEmployees);
-
     }
 
 

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NetProject.Models.Entities;
 using NetProject.Models.Enums;
 
@@ -163,21 +163,30 @@ public sealed class WarehouseDbContext : DbContext
             ? "system"
             : _auditUserContext.Username.Trim();
 
-        foreach (var entry in ChangeTracker.Entries().Where(x => x.Metadata.FindProperty("CreatedAt") is not null))
+        foreach (var entry in ChangeTracker.Entries())
         {
+            var meta = entry.Metadata;
             if (entry.State == EntityState.Added)
             {
-                entry.Property("CreatedAt").CurrentValue = now;
-                entry.Property("CreatedBy").CurrentValue = username;
-                entry.Property("UpdatedAt").CurrentValue = now;
-                entry.Property("UpdatedBy").CurrentValue = username;
+                if (meta.FindProperty("CreatedAt") is not null)
+                    entry.Property("CreatedAt").CurrentValue = now;
+                if (meta.FindProperty("CreatedBy") is not null)
+                    entry.Property("CreatedBy").CurrentValue = username;
+                if (meta.FindProperty("UpdatedAt") is not null)
+                    entry.Property("UpdatedAt").CurrentValue = now;
+                if (meta.FindProperty("UpdatedBy") is not null)
+                    entry.Property("UpdatedBy").CurrentValue = username;
             }
             else if (entry.State == EntityState.Modified)
             {
-                entry.Property("CreatedAt").IsModified = false;
-                entry.Property("CreatedBy").IsModified = false;
-                entry.Property("UpdatedAt").CurrentValue = now;
-                entry.Property("UpdatedBy").CurrentValue = username;
+                if (meta.FindProperty("CreatedAt") is not null)
+                    entry.Property("CreatedAt").IsModified = false;
+                if (meta.FindProperty("CreatedBy") is not null)
+                    entry.Property("CreatedBy").IsModified = false;
+                if (meta.FindProperty("UpdatedAt") is not null)
+                    entry.Property("UpdatedAt").CurrentValue = now;
+                if (meta.FindProperty("UpdatedBy") is not null)
+                    entry.Property("UpdatedBy").CurrentValue = username;
             }
         }
     }

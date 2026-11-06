@@ -117,6 +117,15 @@ public partial class WarehouseLocationView : UserControl
         }
     }
 
+    private void CloseSidePanel()
+    {
+        _selectedLocationId = null;
+        if (pnlEditForm != null) pnlEditForm.Visibility = Visibility.Collapsed;
+        if (pnlInventoryList != null) pnlInventoryList.Visibility = Visibility.Collapsed;
+        if (brdSidePanel != null) brdSidePanel.Visibility = Visibility.Collapsed;
+        if (dgLocations != null) dgLocations.SelectedItem = null;
+    }
+
     private void BtnNewLocation_Click(object sender, RoutedEventArgs e)
     {
         _selectedLocationId = null;
@@ -128,8 +137,10 @@ public partial class WarehouseLocationView : UserControl
         lblSaveBtnText.Text = "💾 Tạo Vị Trí Mới";
         pnlLocationStats.Visibility = Visibility.Collapsed;
 
-        pnlEditForm.Visibility = Visibility.Visible;
-        pnlInventoryList.Visibility = Visibility.Collapsed;
+        if (brdSidePanel != null) brdSidePanel.Visibility = Visibility.Visible;
+        if (pnlEditForm != null) pnlEditForm.Visibility = Visibility.Visible;
+        if (pnlInventoryList != null) pnlInventoryList.Visibility = Visibility.Collapsed;
+        if (dgLocations != null) dgLocations.SelectedItem = null;
         txtLocationName.Focus();
     }
 
@@ -155,13 +166,14 @@ public partial class WarehouseLocationView : UserControl
         txtStatTotalQty.Text = $"{loc.TotalQuantity:N0} chiếc";
         pnlLocationStats.Visibility = Visibility.Visible;
 
-        pnlEditForm.Visibility = Visibility.Visible;
-        pnlInventoryList.Visibility = Visibility.Collapsed;
+        if (brdSidePanel != null) brdSidePanel.Visibility = Visibility.Visible;
+        if (pnlEditForm != null) pnlEditForm.Visibility = Visibility.Visible;
+        if (pnlInventoryList != null) pnlInventoryList.Visibility = Visibility.Collapsed;
     }
 
     private void BtnCancelEdit_Click(object sender, RoutedEventArgs e)
     {
-        BtnNewLocation_Click(sender, e);
+        CloseSidePanel();
     }
 
     private async void BtnSaveLocation_Click(object sender, RoutedEventArgs e)
@@ -191,7 +203,7 @@ public partial class WarehouseLocationView : UserControl
                 {
                     ShowStatus($"Tạo vị trí kho '{name}' thành công!");
                     await LoadLocationsAsync();
-                    BtnNewLocation_Click(sender, e);
+                    CloseSidePanel();
                 }
                 else
                 {
@@ -213,6 +225,7 @@ public partial class WarehouseLocationView : UserControl
                 {
                     ShowStatus($"Cập nhật vị trí kho '{name}' thành công!");
                     await LoadLocationsAsync();
+                    CloseSidePanel();
                 }
                 else
                 {
@@ -250,7 +263,7 @@ public partial class WarehouseLocationView : UserControl
                 {
                     ShowStatus($"Đã xóa thành công vị trí kho '{loc.LocationCode}'!");
                     await LoadLocationsAsync();
-                    BtnNewLocation_Click(sender, e);
+                    CloseSidePanel();
                 }
                 else
                 {
@@ -286,15 +299,15 @@ public partial class WarehouseLocationView : UserControl
                 dgLocationItems.ItemsSource = new List<LocationInventoryItemModel>();
             }
 
-            pnlEditForm.Visibility = Visibility.Collapsed;
-            pnlInventoryList.Visibility = Visibility.Visible;
+            if (brdSidePanel != null) brdSidePanel.Visibility = Visibility.Visible;
+            if (pnlEditForm != null) pnlEditForm.Visibility = Visibility.Collapsed;
+            if (pnlInventoryList != null) pnlInventoryList.Visibility = Visibility.Visible;
         }
     }
 
     private void BtnCloseInventory_Click(object sender, RoutedEventArgs e)
     {
-        pnlInventoryList.Visibility = Visibility.Collapsed;
-        pnlEditForm.Visibility = Visibility.Visible;
+        CloseSidePanel();
     }
 
     private void BtnTransferCurrentLoc_Click(object sender, RoutedEventArgs e)
@@ -461,4 +474,3 @@ public partial class WarehouseLocationView : UserControl
         }));
     }
 }
-
