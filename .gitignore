@@ -494,3 +494,9 @@ $RECYCLE.BIN/
 # Local NuGet APPDATA workaround
 .nuget_home/
 
+# Temporary preview and export artifacts
+*_preview.pdf
+*.tmp
+*.bak
+
+
