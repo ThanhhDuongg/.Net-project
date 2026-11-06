@@ -102,7 +102,7 @@ public partial class EmployeeView : UserControl
         if (!isAdmin)
         {
             brdPermissionWarning.Visibility = Visibility.Visible;
-            txtPermissionWarning.Text = $"Chế độ chỉ xem: Bạn đang đăng nhập bằng tài khoản '{UserSession.RoleName}'. Chỉ Quản trị viên (Admin) mới có quyền tạo mới, sửa đổi vai trò hoặc khóa tài khoản.";
+            txtPermissionWarning.Text = $"Chế độ chỉ xem: Bạn đang đăng nhập bằng tài khoản '{UserSession.RoleName}'. Chỉ Quản trị viên (Admin) mới có quyền tạo mới, phân quyền, đổi mật khẩu hoặc khóa tài khoản.";
             btnAddEmployee.IsEnabled = false;
             btnAddEmployee.Opacity = 0.6;
         }
@@ -607,7 +607,7 @@ public class UserDisplayModel
         {
             AvatarBg = new SolidColorBrush(Color.FromRgb(219, 234, 254)); // #DBEAFE
             AvatarFg = new SolidColorBrush(Color.FromRgb(30, 64, 175));   // #1E40AF
-            RoleBadgeText = "👑 Quản trị viên (Admin)";
+            RoleBadgeText = "👑 Quản trị viên";
             RoleBadgeBg = new SolidColorBrush(Color.FromRgb(238, 242, 255)); // #EEF2FF
             RoleBadgeFg = new SolidColorBrush(Color.FromRgb(67, 56, 202));   // #4338CA
         }
@@ -615,7 +615,7 @@ public class UserDisplayModel
         {
             AvatarBg = new SolidColorBrush(Color.FromRgb(209, 250, 229)); // #D1FAE5
             AvatarFg = new SolidColorBrush(Color.FromRgb(6, 95, 70));     // #065F46
-            RoleBadgeText = "📦 Thủ kho (WarehouseKeeper)";
+            RoleBadgeText = "📦 Thủ kho";
             RoleBadgeBg = new SolidColorBrush(Color.FromRgb(236, 253, 245)); // #ECFDF5
             RoleBadgeFg = new SolidColorBrush(Color.FromRgb(4, 120, 87));    // #047857
         }
