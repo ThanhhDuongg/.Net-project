@@ -65,6 +65,36 @@ public class BarcodeGeneratorService
         return $"893{number:D9}";
     }
 
+    public static string GetColorAbbreviation(string colorName)
+    {
+        if (string.IsNullOrWhiteSpace(colorName)) return "GEN";
+        var upper = colorName.Trim().ToUpperInvariant();
+        if (upper.Contains("TRẮNG") || upper.Contains("TRANG") || upper.Contains("WHITE") || upper == "WHT") return "WHT";
+        if (upper.Contains("ĐEN") || upper.Contains("DEN") || upper.Contains("BLACK") || upper == "BLK") return "BLK";
+        if (upper.Contains("NAVY") || upper.Contains("XANH DƯƠNG") || upper.Contains("XANH NAVY") || upper.Contains("BLUE") || upper == "NAV") return "NAV";
+        if (upper.Contains("ĐỎ") || upper.Contains("DO") || upper.Contains("RED")) return "RED";
+        if (upper.Contains("VÀNG") || upper.Contains("VANG") || upper.Contains("YELLOW")) return "YEL";
+        if (upper.Contains("XÁM") || upper.Contains("XAM") || upper.Contains("GRAY") || upper.Contains("GREY")) return "GRY";
+        if (upper.Contains("XANH LÁ") || upper.Contains("GREEN")) return "GRN";
+        if (upper.Contains("HỒNG") || upper.Contains("PINK")) return "PNK";
+        if (upper.Contains("CAM") || upper.Contains("ORANGE")) return "ORG";
+        if (upper.Contains("TÍM") || upper.Contains("PURPLE")) return "PUR";
+        if (upper.Contains("NÂU") || upper.Contains("BROWN")) return "BRN";
+
+        var normalized = upper.Normalize(NormalizationForm.FormD);
+        var sb = new StringBuilder();
+        foreach (var ch in normalized)
+        {
+            var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(ch);
+            if (uc != System.Globalization.UnicodeCategory.NonSpacingMark && char.IsLetterOrDigit(ch))
+            {
+                sb.Append(ch);
+            }
+        }
+        var clean = sb.ToString();
+        return clean.Length >= 3 ? clean[..3] : clean.PadRight(3, 'X');
+    }
+
     // Sinh danh sách ma trận biến thể ProductVariant
     public List<GeneratedVariantDto> GenerateMatrix(
         string productCode,
@@ -80,7 +110,7 @@ public class BarcodeGeneratorService
             foreach (var s in sizes)
             {
                 // Quy tắc SKU: MÃSẢNPHẨM-MÃMÀU-SIZE (VD: POLO01-BLK-M)
-                string colorAbbr = c.Name.Length >= 3 ? c.Name[..3].ToUpper() : c.Name.ToUpper();
+                string colorAbbr = GetColorAbbreviation(c.Name);
                 string sku = $"{productCode}-{colorAbbr}-{s.Name.ToUpper()}";
                 string barcode = GenerateBarcode(sku);
 

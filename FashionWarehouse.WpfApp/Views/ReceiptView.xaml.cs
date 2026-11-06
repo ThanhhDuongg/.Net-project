@@ -144,6 +144,7 @@ public partial class ReceiptView : UserControl
             rdoExport.IsChecked = !isImport;
         }
         TransactionType_Changed(this, new RoutedEventArgs());
+        _ = LoadLiveCatalogAsync();
     }
 
     private void UpdatePartnerDropdown()

@@ -75,6 +75,39 @@ public sealed class ProductService : IProductService
         var colorTuples = colors.Select(c => (c.ColorId, c.ColorName)).ToList();
         var sizeTuples = sizes.Select(s => (s.SizeId, s.SizeName)).ToList();
 
+        List<GeneratedVariantDto> matrix;
+        if (dto.Variants != null && dto.Variants.Count > 0)
+        {
+            matrix = dto.Variants.Select(v =>
+            {
+                var cName = colors.FirstOrDefault(c => c.ColorId == v.ColorId)?.ColorName ?? "";
+                var sName = sizes.FirstOrDefault(s => s.SizeId == v.SizeId)?.SizeName ?? "";
+                var sku = !string.IsNullOrWhiteSpace(v.SKU)
+                    ? v.SKU.Trim()
+                    : $"{dto.ProductCode.Trim()}-{BarcodeGeneratorService.GetColorAbbreviation(cName)}-{sName.ToUpper()}";
+                var barcode = !string.IsNullOrWhiteSpace(v.Barcode)
+                    ? v.Barcode.Trim()
+                    : _barcodeService.GenerateBarcode(sku);
+
+                return new GeneratedVariantDto
+                {
+                    ColorId = v.ColorId,
+                    ColorName = cName,
+                    SizeId = v.SizeId,
+                    SizeName = sName,
+                    SKU = sku,
+                    Barcode = barcode,
+                    CostPrice = v.CostPrice > 0 ? v.CostPrice : dto.CostPrice,
+                    SalePrice = v.SalePrice > 0 ? v.SalePrice : dto.SalePrice
+                };
+            }).ToList();
+        }
+        else
+        {
+            matrix = _barcodeService.GenerateMatrix(
+                dto.ProductCode.Trim(), colorTuples, sizeTuples, dto.CostPrice, dto.SalePrice);
+        }
+
         var existingProduct = await _context.Products
             .Include(p => p.Variants).ThenInclude(v => v.Inventories)
             .FirstOrDefaultAsync(p => p.ProductCode == dto.ProductCode.Trim(), ct);
@@ -87,9 +120,6 @@ public sealed class ProductService : IProductService
             existingProduct.BasePrice = dto.BasePrice;
             if (!string.IsNullOrWhiteSpace(dto.Description))
                 existingProduct.Description = dto.Description.Trim();
-
-            var matrix = _barcodeService.GenerateMatrix(
-                existingProduct.ProductCode, colorTuples, sizeTuples, dto.CostPrice, dto.SalePrice);
 
             foreach (var item in matrix)
             {
@@ -145,10 +175,7 @@ public sealed class ProductService : IProductService
             Description = dto.Description?.Trim()
         };
 
-        var newMatrix = _barcodeService.GenerateMatrix(
-            product.ProductCode, colorTuples, sizeTuples, dto.CostPrice, dto.SalePrice);
-
-        foreach (var item in newMatrix)
+        foreach (var item in matrix)
         {
             var variant = new ProductVariant
             {
@@ -178,7 +205,7 @@ public sealed class ProductService : IProductService
             ProductId = product.ProductId,
             ProductCode = product.ProductCode,
             ProductName = product.ProductName,
-            Variants = newMatrix
+            Variants = matrix
         };
     }
 

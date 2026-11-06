@@ -28,6 +28,17 @@ public class CreateProductMatrixDto
     public List<int> SizeIds { get; set; } = new();
     public decimal CostPrice { get; set; }
     public decimal SalePrice { get; set; }
+    public List<ProductVariantInputDto>? Variants { get; set; }
+}
+
+public class ProductVariantInputDto
+{
+    public int ColorId { get; set; }
+    public int SizeId { get; set; }
+    public string SKU { get; set; } = string.Empty;
+    public string Barcode { get; set; } = string.Empty;
+    public decimal CostPrice { get; set; }
+    public decimal SalePrice { get; set; }
 }
 
 public class GeneratedVariantDto

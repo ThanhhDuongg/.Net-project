@@ -205,7 +205,16 @@ public partial class ProductView : UserControl
             ColorIds = _variants.Select(v => v.ColorId).Distinct().ToList(),
             SizeIds = _variants.Select(v => v.SizeId).Distinct().ToList(),
             CostPrice = costPrice,
-            SalePrice = salePrice
+            SalePrice = salePrice,
+            Variants = _variants.Select(v => new
+            {
+                ColorId = v.ColorId,
+                SizeId = v.SizeId,
+                SKU = v.SKU,
+                Barcode = v.Barcode,
+                CostPrice = v.CostPrice,
+                SalePrice = v.SalePrice
+            }).ToList()
         };
 
         try
@@ -214,15 +223,29 @@ public partial class ProductView : UserControl
             if (response.IsSuccessStatusCode)
             {
                 ShowMessage($"✓ Đã lưu '{body.ProductCode}' với {_variants.Count} biến thể vào CSDL thành công!", true);
+                MessageBox.Show(
+                    $"✓ Đã lưu thành công sản phẩm '{body.ProductCode} - {body.ProductName}' vào CSDL kho!\n\n" +
+                    $"Đã tạo và kích hoạt {_variants.Count} biến thể SKU & Barcode trong hệ thống.\n\n" +
+                    $"👉 Bạn có thể chuyển sang mục 'Nhập kho' để quét mã vạch và nhập hàng vào kho ngay bây giờ.",
+                    "Lưu CSDL Thành Công",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 return;
             }
             var err = await response.Content.ReadAsStringAsync();
             ShowMessage($"Lỗi từ server: {err}", false);
+            MessageBox.Show($"Lỗi từ server: {err}", "Không thể lưu sản phẩm", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-        catch
+        catch (Exception ex)
         {
-            ShowMessage($"✓ Đã sinh {_variants.Count} biến thể SKU cho '{body.ProductCode}'. " +
-                        "Khi Web API đang chạy, dữ liệu sẽ được lưu vào MySQL.", true);
+            ShowMessage($"Không thể kết nối đến Web API (hãy đảm bảo Backend đang chạy): {ex.Message}", false);
+            MessageBox.Show(
+                $"Không thể kết nối đến Web API kho hàng!\n\n" +
+                $"Chi tiết: {ex.Message}\n\n" +
+                $"Vui lòng kiểm tra lại dịch vụ Backend đang chạy trên cổng 5116.",
+                "Lỗi kết nối Web API",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
     }
 

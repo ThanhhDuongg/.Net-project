@@ -173,6 +173,8 @@ public sealed class EfReportRepository : IReportRepository
         join size in _context.Sizes.AsNoTracking() on variant.SizeId equals size.SizeId
         join inventory in _context.Inventories.AsNoTracking() on variant.VariantId equals inventory.VariantId into invGroup
         from inv in invGroup.DefaultIfEmpty()
+        join loc in _context.WarehouseLocations.AsNoTracking() on (inv != null ? inv.LocationId : 1) equals loc.LocationId into locGroup
+        from loc in locGroup.DefaultIfEmpty()
         select new InventoryStatusDto
         {
             VariantId = variant.VariantId,
@@ -183,7 +185,7 @@ public sealed class EfReportRepository : IReportRepository
             ProductName = product.ProductName,
             ColorName = color.ColorName,
             SizeName = size.SizeName,
-            LocationCode = inv != null && inv.Location != null ? inv.Location.LocationCode : "KHO-A-01",
+            LocationCode = loc != null ? loc.LocationCode : "KHO-A-01",
             QuantityOnHand = inv != null ? inv.QuantityOnHand : 0,
             SafetyStock = inv != null ? inv.SafetyStock : 10,
             CostPrice = variant.CostPrice
