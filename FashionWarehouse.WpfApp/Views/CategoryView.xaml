@@ -8,7 +8,7 @@
              FontFamily="Segoe UI">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="360"/>
+            <ColumnDefinition Width="310"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 

@@ -12,41 +12,37 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Thanh tiêu đề & nút hành động -->
-        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="16,12" Margin="0,0,0,14">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel>
+        <!-- Thanh tiêu đề & nút hành động (WrapPanel responsive) -->
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="14,10" Margin="0,0,0,12">
+            <WrapPanel VerticalAlignment="Center">
+                <StackPanel Margin="0,0,16,6" VerticalAlignment="Center">
                     <TextBlock Text="Quản Lý Sản Phẩm &amp; Biến Thể SKU" FontWeight="Bold" FontSize="15" Foreground="#1E293B"/>
-                    <TextBlock Text="Nhập thông tin → Chọn màu + size → Bấm &quot;Tạo Ma Trận&quot; → Lưu vào CSDL" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                    <TextBlock Text="Nhập thông tin → Chọn màu + size → Bấm &quot;Tạo Ma Trận&quot; → Lưu vào CSDL" FontSize="11.5" Foreground="#64748B" Margin="0,2,0,0"/>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Name="btnGenerate" Click="BtnGenerate_Click" Height="38" Margin="0,0,10,0"
-                            Background="#3B82F6" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
+                    <Button Name="btnGenerate" Click="BtnGenerate_Click" Height="36" Margin="0,0,8,0"
+                            Background="#3B82F6" Foreground="White" BorderThickness="0" Padding="14,0" Cursor="Hand">
                         <Button.Resources>
                             <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
                         </Button.Resources>
-                        <TextBlock Text="⚡ Tạo Ma Trận Biến Thể" FontWeight="SemiBold"/>
+                        <TextBlock Text="⚡ Tạo Ma Trận" FontWeight="SemiBold"/>
                     </Button>
-                    <Button Height="38" Background="#10B981" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand"
-                            Click="BtnSaveToDb_Click">
+                    <Button Height="36" Background="#10B981" Foreground="White" BorderThickness="0" Padding="14,0" Cursor="Hand"
+                            Click="BtnSaveToDb_Click" Margin="0,0,8,0">
                         <Button.Resources>
                             <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
                         </Button.Resources>
                         <TextBlock Text="💾 Lưu Vào CSDL" FontWeight="SemiBold"/>
                     </Button>
-                    <Button Name="btnPrintLabels" Click="BtnPrintLabels_Click" Height="38" Margin="10,0,0,0"
-                            Background="#8B5CF6" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
+                    <Button Name="btnPrintLabels" Click="BtnPrintLabels_Click" Height="36"
+                            Background="#8B5CF6" Foreground="White" BorderThickness="0" Padding="14,0" Cursor="Hand">
                         <Button.Resources>
                             <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
                         </Button.Resources>
                         <TextBlock Text="🖨️ In Tem Barcode" FontWeight="SemiBold"/>
                     </Button>
-                </StackPanel>
-            </Grid>
+                </WrapPanel>
+            </WrapPanel>
         </Border>
 
         <!-- Nội dung chính chia 2 cột -->

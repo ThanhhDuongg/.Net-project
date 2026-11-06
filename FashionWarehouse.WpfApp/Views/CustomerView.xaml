@@ -45,22 +45,15 @@
             </Border>
         </Grid>
 
-        <!-- Thanh tìm kiếm, lọc loại KH & Thao tác -->
-        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="14,12" Margin="0,0,0,14">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="280"/>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
+        <!-- Thanh tìm kiếm, lọc loại KH & Thao tác (WrapPanel responsive) -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="12,10" Margin="0,0,0,12">
+            <WrapPanel VerticalAlignment="Center">
                 <!-- Search -->
-                <Grid Grid.Column="0">
-                    <TextBox x:Name="txtSearch" Height="38" Padding="10,0" VerticalContentAlignment="Center"
+                <Grid Width="240" Margin="0,0,8,6">
+                    <TextBox x:Name="txtSearch" Height="36" Padding="8,0" VerticalContentAlignment="Center"
                              TextChanged="TxtSearch_TextChanged"/>
-                    <TextBlock Text="🔍 Tìm theo mã, tên, SĐT, địa chỉ..." Foreground="#94A3B8"
-                               VerticalAlignment="Center" Margin="12,0,0,0" IsHitTestVisible="False">
+                    <TextBlock Text="🔍 Tìm theo mã, tên, SĐT..." Foreground="#94A3B8"
+                               VerticalAlignment="Center" Margin="10,0,0,0" IsHitTestVisible="False">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -75,8 +68,8 @@
                 </Grid>
 
                 <!-- Filter type -->
-                <ComboBox x:Name="cboFilterType" Grid.Column="1" Height="38" Margin="10,0,0,0" SelectedIndex="0"
-                          SelectionChanged="CboFilterType_SelectionChanged">
+                <ComboBox x:Name="cboFilterType" Width="150" Height="36" Margin="0,0,8,6" SelectedIndex="0"
+                          VerticalContentAlignment="Center" SelectionChanged="CboFilterType_SelectionChanged">
                     <ComboBoxItem Content="Tất cả phân loại"/>
                     <ComboBoxItem Content="Đại lý cấp 1"/>
                     <ComboBoxItem Content="Đại lý cấp 2"/>
@@ -84,40 +77,34 @@
                     <ComboBoxItem Content="Khách mua lẻ"/>
                 </ComboBox>
 
-                <TextBlock x:Name="lblStatusMessage" Grid.Column="2" VerticalAlignment="Center" Margin="15,0"
+                <Button Click="BtnRefresh_Click" Height="36" Background="#F1F5F9" Foreground="#475569" BorderThickness="0" Padding="12,0" Margin="0,0,8,6" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
+                    </Button.Resources>
+                    <TextBlock Text="🔄 Làm Mới"/>
+                </Button>
+
+                <Button Click="BtnNewCustomer_Click" Height="36" Background="#2563EB" Foreground="White" BorderThickness="0" Padding="14,0" Margin="0,0,0,6" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
+                    </Button.Resources>
+                    <TextBlock Text="+ Thêm Khách Hàng / Đại Lý" FontWeight="Bold"/>
+                </Button>
+
+                <TextBlock x:Name="lblStatusMessage" VerticalAlignment="Center" Margin="12,0,0,6"
                            FontWeight="SemiBold" FontSize="12" Foreground="#059669"/>
-
-                <StackPanel Grid.Column="3" Orientation="Horizontal">
-                    <Button Click="BtnRefresh_Click" Height="38" Background="#F1F5F9" Foreground="#475569" BorderThickness="0" Padding="14,0" Margin="0,0,10,0" Cursor="Hand">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="6"/>
-                            </Style>
-                        </Button.Resources>
-                        <TextBlock Text="🔄 Làm Mới"/>
-                    </Button>
-
-                    <Button Click="BtnNewCustomer_Click" Height="38" Background="#2563EB" Foreground="White" BorderThickness="0" Padding="16,0" Cursor="Hand">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="6"/>
-                            </Style>
-                        </Button.Resources>
-                        <TextBlock Text="+ Thêm Khách Hàng / Đại Lý" FontWeight="Bold"/>
-                    </Button>
-                </StackPanel>
-            </Grid>
+            </WrapPanel>
         </Border>
 
         <!-- 2 Cột: Bảng dữ liệu Khách hàng & Form thêm/sửa -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="360"/>
+                <ColumnDefinition Width="310"/>
             </Grid.ColumnDefinitions>
 
             <!-- Cột trái: Bảng danh sách Khách hàng -->
-            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16" Margin="0,0,14,0">
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="14" Margin="0,0,12,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -125,31 +112,31 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" Margin="0,0,0,10">
-                        <TextBlock Text="Danh Sách Đại Lý &amp; Khách Hàng Xuất Kho" FontWeight="Bold" FontSize="15" Foreground="#1E293B"/>
+                        <TextBlock Text="Danh Sách Đại Lý &amp; Khách Hàng Xuất Kho" FontWeight="Bold" FontSize="14" Foreground="#1E293B"/>
                         <TextBlock x:Name="lblCount" Text="0 khách hàng" HorizontalAlignment="Right" Foreground="#64748B" FontSize="12"/>
                     </Grid>
 
                     <DataGrid x:Name="dgCustomers" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False"
-                              IsReadOnly="True" HeadersVisibility="Column" RowHeight="44"
+                              IsReadOnly="True" HeadersVisibility="Column" RowHeight="42"
                               GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
                               BorderThickness="0" Background="Transparent"
                               SelectionChanged="DgCustomers_SelectionChanged">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã KH" Width="80" Binding="{Binding CustomerCode}" FontWeight="Bold"/>
-                            <DataGridTextColumn Header="Tên Khách Hàng / Đại Lý" Width="200" Binding="{Binding CustomerName}" FontWeight="Bold"/>
-                            <DataGridTemplateColumn Header="Phân Loại" Width="120">
+                            <DataGridTextColumn Header="Mã KH" Width="75" Binding="{Binding CustomerCode}" FontWeight="Bold"/>
+                            <DataGridTextColumn Header="Tên Khách Hàng / Đại Lý" Width="1.3*" MinWidth="130" Binding="{Binding CustomerName}" FontWeight="Bold"/>
+                            <DataGridTemplateColumn Header="Phân Loại" Width="105">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Border CornerRadius="4" Padding="6,2" HorizontalAlignment="Left"
+                                        <Border CornerRadius="4" Padding="5,2" HorizontalAlignment="Left"
                                                 Background="{Binding TypeBgColor}">
-                                            <TextBlock Text="{Binding CustomerType}" FontWeight="SemiBold" FontSize="11"
+                                            <TextBlock Text="{Binding CustomerType}" FontWeight="SemiBold" FontSize="10.5"
                                                        Foreground="{Binding TypeFgColor}"/>
                                         </Border>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Điện Thoại" Width="110" Binding="{Binding PhoneNumber}"/>
-                            <DataGridTextColumn Header="Địa Chỉ Giao Hàng" Width="*" Binding="{Binding Address}"/>
+                            <DataGridTextColumn Header="Điện Thoại" Width="95" Binding="{Binding PhoneNumber}"/>
+                            <DataGridTextColumn Header="Địa Chỉ Giao Hàng" Width="*" MinWidth="110" Binding="{Binding Address}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
